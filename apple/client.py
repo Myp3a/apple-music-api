@@ -24,6 +24,17 @@ class Session:
                     done = True
                     return resp
 
+    def post(self, *args, **kwargs) -> requests.Response:
+        done = False
+        while not done:
+            with self.session.post(*args, **kwargs) as resp:
+                if resp.status_code == 429:
+                    print("Too many requests, waiting")
+                    time.sleep(1)
+                else:
+                    done = True
+                    return resp
+
 class ApiClient:
     def __init__(self, developer_token, user_token) -> None:
         self.developer_token = developer_token

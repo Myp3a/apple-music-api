@@ -1,10 +1,11 @@
 from enum import Enum
 
-from apple.models.album import LibraryAlbum
-from apple.models.artist import LibraryArtist
+from apple.api.catalog import CatalogTypes
+from apple.models.album import LibraryAlbum, Album
+from apple.models.artist import LibraryArtist, Artist
 from apple.models.object import AppleMusicObject
-from apple.models.playlist import LibraryPlaylist
-from apple.models.song import LibrarySong
+from apple.models.playlist import LibraryPlaylist, Playlist
+from apple.models.song import LibrarySong, Song
 
 
 class LibraryTypes(Enum):
@@ -70,3 +71,26 @@ class LibraryAPI:
                     url = js["results"][return_type.value].get("next", None)
                     if url is None:
                         return results
+                    
+    def add(self, object_to_add) -> bool:
+        item_type = None
+        match object_to_add:
+            case Song():
+                item_type = CatalogTypes.Songs.value
+            case Album():
+                item_type = CatalogTypes.Albums.value
+            case Artist():
+                item_type = CatalogTypes.Artists.value
+            case Playlist():
+                item_type = CatalogTypes.Playlists.value
+        with self.client.session.post(
+            self.client.session.base_url + "/v1/me/library",
+            params={
+                f"ids[{item_type}]": object_to_add.id
+            }
+        ) as resp:
+            print(resp.text)
+            if resp.status_code == 202:
+                return True
+            else:
+                return False
