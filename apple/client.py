@@ -11,7 +11,7 @@ class Session:
         self.session.headers["origin"] = "https://music.apple.com"
         self.session.headers["Authorization"] = f"Bearer {dev_token}"
         self.session.headers["Music-User-Token"] = user_token
-        self.base_url = "https://api.music.apple.com"
+        self.base_url = "https://amp-api.music.apple.com"
 
     def get(self, *args, **kwargs) -> requests.Response:
         done = False
@@ -28,6 +28,17 @@ class Session:
         done = False
         while not done:
             with self.session.post(*args, **kwargs) as resp:
+                if resp.status_code == 429:
+                    print("Too many requests, waiting")
+                    time.sleep(1)
+                else:
+                    done = True
+                    return resp
+
+    def delete(self, *args, **kwargs) -> requests.Response:
+        done = False
+        while not done:
+            with self.session.delete(*args, **kwargs) as resp:
                 if resp.status_code == 429:
                     print("Too many requests, waiting")
                     time.sleep(1)

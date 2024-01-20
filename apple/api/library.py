@@ -35,7 +35,7 @@ class LibraryAPI:
                     next = False
                     return songs
 
-    def search(self, query, return_type: LibraryTypes, limit=5) -> list[AppleMusicObject]:
+    def search(self, query: str, return_type: LibraryTypes, limit: int = 5) -> list[AppleMusicObject]:
         types = [return_type.value]
         query = query.replace(" ", "+")
         results = []
@@ -71,8 +71,8 @@ class LibraryAPI:
                     url = js["results"][return_type.value].get("next", None)
                     if url is None:
                         return results
-                    
-    def add(self, object_to_add) -> bool:
+
+    def add(self, object_to_add: AppleMusicObject) -> bool:
         item_type = None
         match object_to_add:
             case Song():
@@ -89,8 +89,16 @@ class LibraryAPI:
                 f"ids[{item_type}]": object_to_add.id
             }
         ) as resp:
-            print(resp.text)
             if resp.status_code == 202:
+                return True
+            else:
+                return False
+
+    def remove(self, song: Song) -> bool:
+        with self.client.session.delete(
+            self.client.session.base_url + f"/v1/me/library/songs/{song.id}"
+        ) as resp:
+            if resp.status_code == 204:
                 return True
             else:
                 return False
