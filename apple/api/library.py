@@ -2,6 +2,7 @@ from enum import Enum
 
 from apple.models.album import LibraryAlbum
 from apple.models.artist import LibraryArtist
+from apple.models.object import AppleMusicObject
 from apple.models.playlist import LibraryPlaylist
 from apple.models.song import LibrarySong
 
@@ -17,7 +18,7 @@ class LibraryAPI:
     def __init__(self, client) -> None:
         self.client = client
 
-    def songs(self) -> [LibrarySong]:
+    def songs(self) -> list[LibrarySong]:
         songs = []
         next = True
         url = "/v1/me/library/songs"
@@ -33,7 +34,7 @@ class LibraryAPI:
                     next = False
                     return songs
 
-    def search(self, query, return_type: LibraryTypes, limit=5):
+    def search(self, query, return_type: LibraryTypes, limit=5) -> list[AppleMusicObject]:
         types = [return_type.value]
         query = query.replace(" ", "+")
         results = []

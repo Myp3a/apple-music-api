@@ -1,6 +1,5 @@
-from functools import wraps
-import time
 import requests
+import time
 
 from apple.api.catalog import CatalogAPI
 from apple.api.library import LibraryAPI
@@ -14,7 +13,7 @@ class Session:
         self.session.headers["Music-User-Token"] = user_token
         self.base_url = "https://api.music.apple.com"
 
-    def get(self, *args, **kwargs):
+    def get(self, *args, **kwargs) -> requests.Response:
         done = False
         while not done:
             with self.session.get(*args, **kwargs) as resp:
