@@ -1,6 +1,6 @@
 from pydantic import BaseModel, Field
 
-from apple.models.meta import Artwork, AudioVariants, ContentRating, PlayParameters
+from apple.models.meta import Artwork, AudioVariants, ContentRating, Notes, PlayParameters
 from apple.models.object import AppleMusicObject
 
 
@@ -18,7 +18,7 @@ class SongAttributes(BaseModel):
     content_rating: ContentRating = Field(alias="contentRating", default=ContentRating.No)
     disc_number: int = Field(alias="discNumber", default=0)
     duration_in_millis: int = Field(alias="durationInMillis")
-    editorial_notes: str = Field(alias="editorialNotes", default="")
+    editorial_notes: Notes = Field(alias="editorialNotes", default=Notes(**{}))
     genre_names: list[str] = Field(alias="genreNames")
     has_lyrics: bool = Field(alias="hasLyrics")
     is_apple_digital_master: bool = Field(alias="isAppleDigitalMaster")

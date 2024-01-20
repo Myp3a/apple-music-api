@@ -19,6 +19,10 @@ class ContentRating(Enum):
     Clean = "clean"
     Explicit = "explicit"
 
+class Notes(BaseModel):
+    short: str = ""
+    standard: str = ""
+
 class PlayParameters(BaseModel):
     id: str = ""
     kind: str = ""

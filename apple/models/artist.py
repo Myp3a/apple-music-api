@@ -1,12 +1,12 @@
 from pydantic import BaseModel, Field
 
-from apple.models.meta import Artwork
+from apple.models.meta import Artwork, Notes
 from apple.models.object import AppleMusicObject
 
 
 class ArtistAttributes(BaseModel):
     artwork: Artwork = Artwork(**{})
-    editorial_notes: str = Field(alias="editorialNotes", default="")
+    editorial_notes: Notes = Field(alias="editorialNotes", default=Notes(**{}))
     genre_names: list[str] = Field(alias="genreNames")
     name: str
     url: str
