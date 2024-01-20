@@ -25,7 +25,7 @@ class LibraryAPI:
             with self.client.session.get(self.client.session.base_url + url) as resp:
                 js = resp.json()
                 for s in js["data"]:
-                    song = LibrarySong(s)
+                    song = LibrarySong(**s)
                     songs.append(song)
                 if url := js.get("next", False):
                     next = True
@@ -53,16 +53,16 @@ class LibraryAPI:
                     return []
                 if (songs := js["results"].get(LibraryTypes.Songs.value, False)):
                     for res in songs["data"]:
-                        results.append(LibrarySong(res))
+                        results.append(LibrarySong(**res))
                 if (albums := js["results"].get(LibraryTypes.Albums.value, False)):
                     for res in albums["data"]:
-                        results.append(LibraryAlbum(res))
+                        results.append(LibraryAlbum(**res))
                 if (artists := js["results"].get(LibraryTypes.Artists.value, False)):
                     for res in artists["data"]:
-                        results.append(LibraryArtist(res))
+                        results.append(LibraryArtist(**res))
                 if (playlists := js["results"].get(LibraryTypes.Playlists.value, False)):
                     for res in playlists["data"]:
-                        results.append(LibraryPlaylist(res))
+                        results.append(LibraryPlaylist(**res))
                 if len(results) >= limit:
                     return results[:limit]
                 else:

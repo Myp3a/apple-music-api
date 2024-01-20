@@ -1,72 +1,67 @@
+from pydantic import BaseModel, Field
+
 from apple.models.meta import Artwork, AudioVariants, ContentRating, PlayParameters
 from apple.models.object import AppleMusicObject
 
 
-class SongPreview:
-    def __init__(self, data) -> None:
-        self.url = data.get("url")
+class SongPreview(BaseModel):
+    url: str
 
-class SongAttributes:
-    def __init__(self, data) -> None:
-        self.album_name = data.get("albumName")
-        self.artist_name = data.get("artistName")
-        self.artist_url = data.get("artistUrl", None)
-        self.artwork = Artwork(data.get("artwork", {}))
-        self.attribution = data.get("attribution", "")
-        self.audio_variants = [AudioVariants(el) for el in data.get("audioVariants",[None])]
-        self.composer_name = data.get("composerName", "")
-        self.content_rating = ContentRating(data.get("contentRating", "no"))
-        self.disc_number = data.get("discNumber",0)
-        self.duration_in_millis = data.get("durationInMillis")
-        self.editorial_notes = data.get("editorialNotes", "")
-        self.genre_names = data.get("genreNames")
-        self.has_lyrics = data.get("hasLyrics")
-        self.is_apple_digital_master = data.get("isAppleDigitalMaster")
-        self.isrc = data.get("isrc", "")
-        self.movement_count = data.get("movementCount", "")
-        self.movement_name = data.get("movementName", "")
-        self.movement_number = data.get("movementNumber", "")
-        self.name = data.get("name")
-        self.play_params = PlayParameters(data.get("playParams",{}))
-        self.previews = [SongPreview(el) for el in data.get("previews")]
-        self.release_date = data.get("releaseDate","1970-01-01")
-        self.track_number = data.get("trackNumber",0)
-        self.url = data.get("url")
-        self.work_name = data.get("workName", "")
+class SongAttributes(BaseModel):
+    album_name: str = Field(alias="albumName")
+    artist_name: str = Field(alias="artistName")
+    artist_url: str = Field(alias="artistUrl", default="")
+    artwork: Artwork = Artwork(**{})
+    attribution: str = ""
+    audio_variants: list[AudioVariants] = [AudioVariants.LossyStereo]
+    composer_name: str = Field(alias="composerName", default="")
+    content_rating: ContentRating = Field(alias="contentRating", default=ContentRating.No)
+    disc_number: int = Field(alias="discNumber", default=0)
+    duration_in_millis: int = Field(alias="durationInMillis")
+    editorial_notes: str = Field(alias="editorialNotes", default="")
+    genre_names: list[str] = Field(alias="genreNames")
+    has_lyrics: bool = Field(alias="hasLyrics")
+    is_apple_digital_master: bool = Field(alias="isAppleDigitalMaster")
+    isrc: str = Field(alias="isrc", default="")
+    movement_count: int = Field(alias="movementCount", default=0)
+    movement_name: str = Field(alias="movementName", default="")
+    movement_number: int = Field(alias="movementNumber", default=0)
+    name: str
+    play_params: PlayParameters = Field(alias="playParams", default=PlayParameters(**{}))
+    previews: list[SongPreview]
+    release_date: str = Field(alias="releaseDate", default="1970-01-01")
+    track_number: int = Field(alias="trackNumber", default=0)
+    url: str
+    work_name: str = Field(alias="workName", default="")
 
 class Song(AppleMusicObject):
-    def __init__(self, data) -> None:
-        super().__init__(data)
-        self.attributes = SongAttributes(data.get("attributes"))
+    attributes: SongAttributes
 
     def __str__(self) -> str:
-        return f"Song {self.attributes.artistName} - {self.attributes.name}"
+        return f"Song {self.attributes.artist_name} - {self.attributes.name}"
 
     def __repr__(self) -> str:
         return f"<{self.__str__()} ({self.id})>"
 
-class LibrarySongAttributes:
-    def __init__(self, data) -> None:
-        self.album_name = data.get("albumName", "")
-        self.artist_name = data.get("artistName")
-        self.artwork = Artwork(data.get("artwork", {}))
-        self.content_rating = ContentRating(data.get("contentRating", "no"))
-        self.disc_number = data.get("discNumber",0)
-        self.duration_in_millis = data.get("durationInMillis")
-        self.genre_names = data.get("genreNames")
-        self.has_lyrics = data.get("hasLyrics")
-        self.name = data.get("name")
-        self.play_params = PlayParameters(data.get("playParams",{}))
-        self.release_date = data.get("releaseDate","1970-01-01")
-        self.track_number = data.get("trackNumber",0)
+class LibrarySongAttributes(BaseModel):
+    album_name: str = Field(alias="albumName", default="")
+    artist_name: str = Field(alias="artistName")
+    artwork: Artwork = Artwork(**{})
+    content_rating: ContentRating = Field(alias="contentRating", default=ContentRating.No)
+    disc_number: int = Field(alias="discNumber", default=0)
+    duration_in_millis: int = Field(alias="durationInMillis")
+    genre_names: list[str] = Field(alias="genreNames")
+    has_lyrics: bool = Field(alias="hasLyrics")
+    name: str
+    play_params: PlayParameters = Field(alias="playParams", default=PlayParameters(**{}))
+    release_date: str = Field(alias="releaseDate", default="1970-01-01")
+    track_number: int = Field(alias="trackNumber", default=0)
 
 class LibrarySong(AppleMusicObject):
-    def __init__(self, data) -> None:
-        super().__init__(data)
-        self.attributes = LibrarySongAttributes(data.get("attributes"))
+    attributes: LibrarySongAttributes
 
     def __str__(self) -> str:
-        return f"LibrarySong {self.attributes.artistName} - {self.attributes.name}"
+        return f"LibrarySong {self.attributes.artist_name} - {self.attributes.name}"
 
     def __repr__(self) -> str:
         return f"<{self.__str__()} ({self.id})>"

@@ -19,7 +19,6 @@ class CatalogTypes(Enum):
     Stations = "stations"
 
 class CatalogAPI:
-    DEFAULT_SEARCH_LIMIT = 5
     def __init__(self, client) -> None:
         self.client = client
         # TODO: make dynamic storefront detection
@@ -45,16 +44,16 @@ class CatalogAPI:
                     return []
                 if (songs := js["results"].get(CatalogTypes.Songs.value, False)):
                     for res in songs["data"]:
-                        results.append(Song(res))
+                        results.append(Song(**res))
                 if (albums := js["results"].get(CatalogTypes.Albums.value, False)):
                     for res in albums["data"]:
-                        results.append(Album(res))
+                        results.append(Album(**res))
                 if (artists := js["results"].get(CatalogTypes.Artists.value, False)):
                     for res in artists["data"]:
-                        results.append(Artist(res))
+                        results.append(Artist(**res))
                 if (playlists := js["results"].get(CatalogTypes.Playlists.value, False)):
                     for res in playlists["data"]:
-                        results.append(Playlist(res))
+                        results.append(Playlist(**res))
                 if len(results) >= limit:
                     return results[:limit]
                 else:
