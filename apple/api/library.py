@@ -94,9 +94,19 @@ class LibraryAPI:
             else:
                 return False
 
-    def remove(self, song: Song) -> bool:
+    def remove(self, object_to_delete: AppleMusicObject) -> bool:
+        item_type = None
+        match object_to_delete:
+            case LibrarySong():
+                item_type = CatalogTypes.Songs.value
+            case LibraryAlbum():
+                item_type = CatalogTypes.Albums.value
+            case LibraryArtist():
+                item_type = CatalogTypes.Artists.value
+            case LibraryPlaylist():
+                item_type = CatalogTypes.Playlists.value
         with self.client.session.delete(
-            self.client.session.base_url + f"/v1/me/library/songs/{song.id}"
+            self.client.session.base_url + f"/v1/me/library/{item_type}/{object_to_delete.id}"
         ) as resp:
             if resp.status_code == 204:
                 return True
