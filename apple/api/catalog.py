@@ -22,15 +22,13 @@ class CatalogTypes(Enum):
 class CatalogAPI:
     def __init__(self, client) -> None:
         self.client = client
-        # TODO: make dynamic storefront detection
-        self.storefront = "ru"
 
     def search(self, query, return_type: CatalogTypes, limit=5) -> list[AppleMusicObject]:
         types = [return_type.value]
         query = query.replace(" ", "+")
         results = []
         next = True
-        url = f"/v1/catalog/{self.storefront}/search"
+        url = f"/v1/catalog/{self.client.storefront}/search"
         while next:
             with self.client.session.get(
                 self.client.session.base_url + url,
