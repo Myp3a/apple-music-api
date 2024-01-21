@@ -71,5 +71,4 @@ class CatalogAPI:
             return None
         with self.client.session.get(self.client.session.base_url + f"/v1/catalog/{self.client.storefront}/songs/{song_id}") as resp:
             js = resp.json()
-            print(js)
             return Song(**js["data"][0])
