@@ -1,7 +1,11 @@
+import logging
+
 from enum import Enum
 
 from apple.models.meta import Subscription
 
+
+_log = logging.getLogger(__name__)
 
 class MetaKeys(Enum):
     Subscription = "subscription"
@@ -17,4 +21,5 @@ class AccountAPI:
                                      }
         ) as resp:
             js = resp.json()
+            _log.debug("subscription response: %s", js)
             return Subscription(**js["meta"]["subscription"])

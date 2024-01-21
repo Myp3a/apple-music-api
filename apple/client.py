@@ -1,3 +1,4 @@
+import logging
 import requests
 import time
 
@@ -7,6 +8,7 @@ from apple.api.library import LibraryAPI
 from apple.api.playlist import PlaylistAPI
 from apple.errors import AppleMusicAPIException
 
+_log = logging.getLogger(__name__)
 
 class Session:
     def __init__(self, dev_token, user_token, verify_ssl) -> None:
@@ -20,9 +22,11 @@ class Session:
     def _request(self, func, *args, **kwargs) -> requests.Response:
         done = False
         while not done:
+            _log.debug("Doing network request with %s", func)
             with func(*args, **kwargs) as resp:
+                _log.debug("Got response with code %s", resp.status_code)
                 if resp.status_code == 429:
-                    print("Too many requests, waiting")
+                    _log.warning("Got ratelimited, sleeping a bit")
                     time.sleep(1)
                 elif resp.status_code >= 400:
                     error = resp.json()["errors"][0]

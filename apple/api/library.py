@@ -1,3 +1,5 @@
+import logging
+
 from enum import Enum
 
 from apple.api.catalog import CatalogTypes
@@ -7,6 +9,7 @@ from apple.models.object import AppleMusicObject
 from apple.models.playlist import LibraryPlaylist, Playlist
 from apple.models.song import LibrarySong, Song
 
+_log = logging.getLogger(__name__)
 
 class LibraryTypes(Enum):
     Albums = "library-albums"
@@ -26,6 +29,7 @@ class LibraryAPI:
         while next:
             with self.client.session.get(self.client.session.base_url + url) as resp:
                 js = resp.json()
+                _log.debug("songs list response: %s", js)
                 for s in js["data"]:
                     song = LibrarySong(**s)
                     songs.append(song)
@@ -51,6 +55,7 @@ class LibraryAPI:
                     }
             ) as resp:
                 js = resp.json()
+                _log.debug("search response: %s", js)
                 if js["results"] == {}:
                     return []
                 if (songs := js["results"].get(LibraryTypes.Songs.value, False)):
@@ -89,6 +94,7 @@ class LibraryAPI:
                 f"ids[{item_type}]": object_to_add.id
             }
         ) as resp:
+            _log.debug("library add response: %s", resp.json())
             if resp.status_code == 202:
                 return True
             else:
@@ -108,6 +114,7 @@ class LibraryAPI:
         with self.client.session.delete(
             self.client.session.base_url + f"/v1/me/library/{item_type}/{object_to_delete.id}"
         ) as resp:
+            _log.debug("library remove response: %s", resp.json())
             if resp.status_code == 204:
                 return True
             else:

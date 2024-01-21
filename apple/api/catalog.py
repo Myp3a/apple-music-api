@@ -1,3 +1,5 @@
+import logging
+
 from enum import Enum
 
 from apple.models.album import Album
@@ -7,6 +9,7 @@ from apple.models.object import AppleMusicObject
 from apple.models.playlist import Playlist
 from apple.models.song import Song
 
+_log = logging.getLogger(__name__)
 
 class CatalogTypes(Enum):
     Activities = "activities"
@@ -40,6 +43,7 @@ class CatalogAPI:
                     }
             ) as resp:
                 js = resp.json()
+                _log.debug("search response: %s", js)
                 if js["results"] == {}:
                     return []
                 if (songs := js["results"].get(CatalogTypes.Songs.value, False)):
@@ -64,11 +68,11 @@ class CatalogAPI:
     def lyrics(self, song) -> Lyrics:
         with self.client.session.get(self.client.session.base_url + f"/v1/catalog/{self.client.storefront}/songs/{song.id}/lyrics") as resp:
             js = resp.json()
+            _log.debug("lyrics response: %s", js)
             return Lyrics(**js["data"][0])
 
     def get_by_id(self, song_id) -> Song:
-        if song_id == "":
-            return None
         with self.client.session.get(self.client.session.base_url + f"/v1/catalog/{self.client.storefront}/songs/{song_id}") as resp:
             js = resp.json()
+            _log.debug("get by id response: %s", js)
             return Song(**js["data"][0])
