@@ -2,6 +2,7 @@ from enum import Enum
 
 from apple.models.album import Album
 from apple.models.artist import Artist
+from apple.models.lyrics import Lyrics
 from apple.models.object import AppleMusicObject
 from apple.models.playlist import Playlist
 from apple.models.song import Song
@@ -59,3 +60,16 @@ class CatalogAPI:
                     url = js["results"][return_type.value].get("next", None)
                     if url is None:
                         return results
+
+    def lyrics(self, song) -> Lyrics:
+        with self.client.session.get(self.client.session.base_url + f"/v1/catalog/{self.client.storefront}/songs/{song.id}/lyrics") as resp:
+            js = resp.json()
+            return Lyrics(**js["data"][0])
+
+    def get_by_id(self, song_id) -> Song:
+        if song_id == "":
+            return None
+        with self.client.session.get(self.client.session.base_url + f"/v1/catalog/{self.client.storefront}/songs/{song_id}") as resp:
+            js = resp.json()
+            print(js)
+            return Song(**js["data"][0])
