@@ -8,8 +8,9 @@ from apple.api.playlist import PlaylistAPI
 
 
 class Session:
-    def __init__(self, dev_token, user_token) -> None:
+    def __init__(self, dev_token, user_token, verify_ssl) -> None:
         self.session = requests.Session()
+        self.session.verify = verify_ssl
         self.session.headers["origin"] = "https://music.apple.com"
         self.session.headers["Authorization"] = f"Bearer {dev_token}"
         self.session.headers["Music-User-Token"] = user_token
@@ -49,10 +50,10 @@ class Session:
                     return resp
 
 class ApiClient:
-    def __init__(self, developer_token, user_token) -> None:
+    def __init__(self, developer_token, user_token, verify_ssl=True) -> None:
         self.developer_token = developer_token
         self.user_token = user_token
-        self.session = Session(self.developer_token, self.user_token)
+        self.session = Session(self.developer_token, self.user_token, verify_ssl)
         self.library = LibraryAPI(self)
         self.catalog = CatalogAPI(self)
         self.playlist = PlaylistAPI(self)
