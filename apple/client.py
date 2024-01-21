@@ -1,6 +1,7 @@
 import requests
 import time
 
+from apple.api.account import AccountAPI
 from apple.api.catalog import CatalogAPI
 from apple.api.library import LibraryAPI
 from apple.api.playlist import PlaylistAPI
@@ -51,9 +52,9 @@ class ApiClient:
     def __init__(self, developer_token, user_token) -> None:
         self.developer_token = developer_token
         self.user_token = user_token
-        # TODO: make dynamic storefront detection
-        self.storefront = "ru"
         self.session = Session(self.developer_token, self.user_token)
         self.library = LibraryAPI(self)
         self.catalog = CatalogAPI(self)
         self.playlist = PlaylistAPI(self)
+        self.account = AccountAPI(self)
+        self.storefront = self.account.subscription().storefront

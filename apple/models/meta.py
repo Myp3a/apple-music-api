@@ -30,3 +30,7 @@ class PlayParameters(BaseModel):
     reporting: bool = False
     catalog_id: str = Field(alias="catalogId", default="")
     reporting_id: str = Field(alias="reportingId", default="")
+
+class Subscription(BaseModel):
+    active: bool
+    storefront: str
