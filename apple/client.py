@@ -5,6 +5,7 @@ from apple.api.account import AccountAPI
 from apple.api.catalog import CatalogAPI
 from apple.api.library import LibraryAPI
 from apple.api.playlist import PlaylistAPI
+from apple.errors import AppleMusicAPIException
 
 
 class Session:
@@ -23,6 +24,9 @@ class Session:
                 if resp.status_code == 429:
                     print("Too many requests, waiting")
                     time.sleep(1)
+                elif resp.status_code >= 400:
+                    error = resp.json()["errors"][0]
+                    raise AppleMusicAPIException(error)
                 else:
                     done = True
                     return resp
@@ -34,6 +38,9 @@ class Session:
                 if resp.status_code == 429:
                     print("Too many requests, waiting")
                     time.sleep(1)
+                elif resp.status_code >= 400:
+                    error = resp.json()["errors"][0]
+                    raise AppleMusicAPIException(error)
                 else:
                     done = True
                     return resp
@@ -45,6 +52,9 @@ class Session:
                 if resp.status_code == 429:
                     print("Too many requests, waiting")
                     time.sleep(1)
+                elif resp.status_code >= 400:
+                    error = resp.json()["errors"][0]
+                    raise AppleMusicAPIException(error)
                 else:
                     done = True
                     return resp
