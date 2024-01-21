@@ -17,10 +17,10 @@ class Session:
         self.session.headers["Music-User-Token"] = user_token
         self.base_url = "https://amp-api.music.apple.com"
 
-    def get(self, *args, **kwargs) -> requests.Response:
+    def _request(self, func, *args, **kwargs) -> requests.Response:
         done = False
         while not done:
-            with self.session.get(*args, **kwargs) as resp:
+            with func(*args, **kwargs) as resp:
                 if resp.status_code == 429:
                     print("Too many requests, waiting")
                     time.sleep(1)
@@ -30,34 +30,15 @@ class Session:
                 else:
                     done = True
                     return resp
+                
+    def get(self, *args, **kwargs) -> requests.Response:
+        return self._request(self.session.get, *args, **kwargs)
 
     def post(self, *args, **kwargs) -> requests.Response:
-        done = False
-        while not done:
-            with self.session.post(*args, **kwargs) as resp:
-                if resp.status_code == 429:
-                    print("Too many requests, waiting")
-                    time.sleep(1)
-                elif resp.status_code >= 400:
-                    error = resp.json()["errors"][0]
-                    raise AppleMusicAPIException(error)
-                else:
-                    done = True
-                    return resp
+        return self._request(self.session.post, *args, **kwargs)
 
     def delete(self, *args, **kwargs) -> requests.Response:
-        done = False
-        while not done:
-            with self.session.delete(*args, **kwargs) as resp:
-                if resp.status_code == 429:
-                    print("Too many requests, waiting")
-                    time.sleep(1)
-                elif resp.status_code >= 400:
-                    error = resp.json()["errors"][0]
-                    raise AppleMusicAPIException(error)
-                else:
-                    done = True
-                    return resp
+        return self._request(self.session.delete, *args, **kwargs)
 
 class ApiClient:
     def __init__(self, developer_token, user_token, verify_ssl=True) -> None:
