@@ -2,8 +2,8 @@ from enum import Enum
 from pydantic import BaseModel, Field
 
 class Artwork(BaseModel):
-    width: int = 0
-    height: int = 0
+    width: int | None = 0
+    height: int | None = 0
     url: str = ""
 
 class AudioVariants(Enum):
