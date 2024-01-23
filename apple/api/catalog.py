@@ -63,10 +63,9 @@ class CatalogAPI:
                         results.append(Playlist(**res))
                 if len(results) >= limit:
                     return results[:limit]
-                else:
-                    url = js["results"][return_type.value].get("next", None)
-                    if url is None:
-                        return results
+                url = js["results"][return_type.value].get("next", None)
+                if url is None:
+                    return results
 
     def lyrics(self, song: Song) -> Lyrics:
         with self.client.session.get(

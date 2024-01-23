@@ -43,10 +43,7 @@ class PlaylistAPI:
             self.client.session.base_url
             + f"/v1/me/library/playlists/{playlist.id}"
         ) as resp:
-            if resp.status_code == 204:
-                return True
-            else:
-                return False
+            return resp.status_code == 204
 
     def add_to_playlist(
         self, playlist: LibraryPlaylist, songs: list[Song | LibrarySong]
@@ -54,9 +51,9 @@ class PlaylistAPI:
         tracks_to_add = []
         for s in songs:
             t = None
-            if type(s) is Song:
+            if isinstance(s, Song):
                 t = CatalogTypes.Songs.value
-            elif type(s) is LibrarySong:
+            elif isinstance(s, LibrarySong):
                 t = LibraryTypes.Songs.value
             tracks_to_add.append({"type": t, "id": s.id})
         with self.client.session.post(
@@ -64,18 +61,15 @@ class PlaylistAPI:
             + f"/v1/me/library/playlists/{playlist.id}/tracks",
             json={"data": tracks_to_add},
         ) as resp:
-            if resp.status_code == 201:
-                return True
-            else:
-                return False
+            return resp.status_code == 201
 
     def list_tracks(
         self, playlist: LibraryPlaylist | Playlist
     ) -> list[Song | LibrarySong]:
         res = []
-        if type(playlist) is LibraryPlaylist:
+        if isinstance(playlist, LibraryPlaylist):
             url = f"/v1/me/library/playlists/{playlist.id}/tracks"
-        elif type(playlist) is Playlist:
+        elif isinstance(playlist, Playlist):
             url = f"/v1/catalog/{self.client.storefront}/playlists/{playlist.id}/tracks"
         with self.client.session.get(
             self.client.session.base_url + url
