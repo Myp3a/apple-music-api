@@ -76,3 +76,11 @@ class CatalogAPI:
             js = resp.json()
             _log.debug("get by id response: %s", js)
             return Song(**js["data"][0])
+
+    def get_by_isrc(self, isrc):
+        with self.client.session.get(self.client.session.base_url + f"/v1/catalog/{self.client.storefront}/songs",
+                                     params={"filter[isrc]": isrc}
+        ) as resp:
+            js = resp.json()
+            _log.debug("get by isrc response: %s", js)
+            return Song(**js["data"][0])
