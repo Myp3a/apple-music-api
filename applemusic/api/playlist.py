@@ -1,7 +1,7 @@
-from apple.api.catalog import CatalogTypes
-from apple.api.library import LibraryTypes
-from apple.models.playlist import LibraryPlaylist, Playlist
-from apple.models.song import LibrarySong, Song
+from applemusic.api.catalog import CatalogTypes
+from applemusic.api.library import LibraryTypes
+from applemusic.models.playlist import LibraryPlaylist, Playlist
+from applemusic.models.song import LibrarySong, Song
 
 
 class PlaylistAPI:

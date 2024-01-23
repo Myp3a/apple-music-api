@@ -3,11 +3,11 @@ import time
 
 import requests
 
-from apple.api.account import AccountAPI
-from apple.api.catalog import CatalogAPI
-from apple.api.library import LibraryAPI
-from apple.api.playlist import PlaylistAPI
-from apple.errors import AppleMusicAPIException
+from applemusic.api.account import AccountAPI
+from applemusic.api.catalog import CatalogAPI
+from applemusic.api.library import LibraryAPI
+from applemusic.api.playlist import PlaylistAPI
+from applemusic.errors import AppleMusicAPIException
 
 _log = logging.getLogger(__name__)
 

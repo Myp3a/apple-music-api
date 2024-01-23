@@ -1,13 +1,13 @@
 from pydantic import BaseModel, Field
 
-from apple.models.meta import (
+from applemusic.models.meta import (
     Artwork,
     AudioVariants,
     ContentRating,
     Notes,
     PlayParameters,
 )
-from apple.models.object import AppleMusicObject
+from applemusic.models.object import AppleMusicObject
 
 
 class SongPreview(BaseModel):

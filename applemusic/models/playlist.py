@@ -2,8 +2,8 @@ from enum import Enum
 
 from pydantic import BaseModel, Field
 
-from apple.models.meta import Artwork, Notes, PlayParameters
-from apple.models.object import AppleMusicObject
+from applemusic.models.meta import Artwork, Notes, PlayParameters
+from applemusic.models.object import AppleMusicObject
 
 
 class PlaylistTrackTypes(Enum):

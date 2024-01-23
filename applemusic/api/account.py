@@ -1,7 +1,7 @@
 import logging
 from enum import Enum
 
-from apple.models.meta import Subscription
+from applemusic.models.meta import Subscription
 
 _log = logging.getLogger(__name__)
 

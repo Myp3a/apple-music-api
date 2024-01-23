@@ -1,11 +1,11 @@
 import logging
 from enum import Enum
 
-from apple.models.album import Album
-from apple.models.artist import Artist
-from apple.models.lyrics import Lyrics
-from apple.models.playlist import Playlist
-from apple.models.song import Song
+from applemusic.models.album import Album
+from applemusic.models.artist import Artist
+from applemusic.models.lyrics import Lyrics
+from applemusic.models.playlist import Playlist
+from applemusic.models.song import Song
 
 _log = logging.getLogger(__name__)
 

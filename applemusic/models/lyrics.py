@@ -2,8 +2,8 @@ import re
 
 from pydantic import BaseModel, Field
 
-from apple.models.meta import PlayParameters
-from apple.models.object import AppleMusicObject
+from applemusic.models.meta import PlayParameters
+from applemusic.models.object import AppleMusicObject
 
 
 class LyricsAttributes(BaseModel):
