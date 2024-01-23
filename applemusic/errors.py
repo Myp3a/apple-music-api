@@ -7,6 +7,24 @@ class ErrorSource(BaseModel):
 
 
 class AppleMusicAPIException(Exception):
+    """Base exception class for Apple Music API.
+
+    Attributes
+    ----------
+    code: int
+        HTTP error code?
+    detail: str
+        Detailed error description, if available.
+    id: str
+        Unique Apple error ID.
+    source: ErrorSource
+        Detailed information about position of error.
+    status: int
+        HTTP error code.
+    title: str
+        Short error message.
+    """
+
     def __init__(self, data, *args: object) -> None:
         super().__init__(*args)
         self.code = data.get("code")

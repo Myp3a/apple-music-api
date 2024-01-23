@@ -1,5 +1,8 @@
+from __future__ import annotations
+
 import logging
 from enum import Enum
+from typing import TYPE_CHECKING
 
 from applemusic.api.catalog import CatalogTypes
 from applemusic.models.album import Album, LibraryAlbum
@@ -8,10 +11,15 @@ from applemusic.models.object import AppleMusicObject
 from applemusic.models.playlist import LibraryPlaylist, Playlist
 from applemusic.models.song import LibrarySong, Song
 
+if TYPE_CHECKING:
+    from applemusic.client import ApiClient
+
 _log = logging.getLogger(__name__)
 
 
 class LibraryTypes(Enum):
+    """Available library search types."""
+
     Albums = "library-albums"
     Artists = "library-artists"
     MusicVideos = "library-music-videos"
@@ -20,10 +28,16 @@ class LibraryTypes(Enum):
 
 
 class LibraryAPI:
-    def __init__(self, client) -> None:
+    def __init__(self, client: ApiClient) -> None:
         self.client = client
 
     def songs(self) -> list[LibrarySong]:
+        """List[`Song`]: Returns a list of library songs.
+
+        Could be slow. Internally limited by 25 songs per request.
+
+        Needs a Music User Token.
+        """
         songs = []
         url = "/v1/me/library/songs"
         while True:
@@ -43,6 +57,20 @@ class LibraryAPI:
     def search(
         self, query: str, return_type: LibraryTypes, limit: int = 5
     ) -> list[LibrarySong | LibraryAlbum | LibraryArtist | LibraryPlaylist]:
+        """List[`LibrarySong`|`LibraryAlbum`|`LibraryArtist`|`LibraryPlaylist`]: Returns search results.
+        Returned type is determined by `return_type` parameter.
+
+        Needs a Music User Token.
+
+        Arguments
+        ---------
+        query: `str`
+            Search query.
+        return_type: `LibraryTypes`
+            What to search for.
+        limit: `int`
+            Limit for returned results. Can't be more than 25 internally.
+        """
         types = [return_type.value]
         query = query.replace(" ", "+")
         results = []
@@ -82,6 +110,15 @@ class LibraryAPI:
                         return results
 
     def add(self, object_to_add: AppleMusicObject) -> bool:
+        """`bool`: Adds an object to user's music library.
+
+        Needs a Music User Token.
+
+        Arguments
+        ---------
+        object_to_add: `AppleMusicObject`
+            Object to add to library. Can be either `Song`, `Album`, `Artist` or `Playlist`.
+        """
         item_type = None
         match object_to_add:
             case Song():
@@ -103,6 +140,16 @@ class LibraryAPI:
                 return False
 
     def remove(self, object_to_delete: AppleMusicObject) -> bool:
+        """`bool`: Removes an object from user's music library.
+
+        Needs a Music User Token.
+
+        Arguments
+        ---------
+        object_to_delete: `AppleMusicObject`
+            Object to delete from library. Can be either `LibrarySong`,
+            `LibraryAlbum`, `LibraryArtist` or `LibraryPlaylist`.
+        """
         item_type = None
         match object_to_delete:
             case LibrarySong():

@@ -1,5 +1,6 @@
 import logging
 import time
+from functools import wraps
 
 import requests
 
@@ -13,6 +14,27 @@ _log = logging.getLogger(__name__)
 
 
 class Session:
+    """Wrapper for requests.Session. Provides authentication, error and ratelimit handling.
+
+    Arguments
+    ---------
+    dev_token: str
+        Apple Developer token.
+    user_token: str | None
+        Music User Token for library interaction.
+    verify_ssl: bool
+        SSL verification for debug purposes.
+
+    Methods
+    -------
+    get: requests.Response
+        requests.get() wrapper.
+    post: requests.Response
+        requests.post() wrapper.
+    delete: requests.Response
+        requests.delete() wrapper.
+    """
+
     def __init__(self, dev_token, user_token, verify_ssl) -> None:
         self.session = requests.Session()
         self.session.verify = verify_ssl
@@ -38,17 +60,50 @@ class Session:
                     done = True
                     return resp
 
+    @wraps(requests.get)
     def get(self, *args, **kwargs) -> requests.Response:
         return self._request(self.session.get, *args, **kwargs)
 
+    @wraps(requests.post)
     def post(self, *args, **kwargs) -> requests.Response:
         return self._request(self.session.post, *args, **kwargs)
 
+    @wraps(requests.delete)
     def delete(self, *args, **kwargs) -> requests.Response:
         return self._request(self.session.delete, *args, **kwargs)
 
 
 class ApiClient:
+    """Represents a client connection that connects to Apple Music API.
+    This class is used to interact with API.
+
+    Parameters
+    ----------
+    developer_token: str
+        Apple Developer token.
+    user_token: str | None
+        Music User Token for library interaction. If None, only free API will be available.
+    storefront: str | None
+        Specific storefront for catalog requests. Auto-detects by default.
+    verify_ssl: bool
+        SSL verification for debug purposes.
+
+    Attributes
+    ----------
+    storefront: str
+        Two-letter encoded country of Apple storefront location
+    session: applemusic.Session
+        Wrapper for requests.Session with authentication, error and ratelimit handling.
+    library: applemusic.LibraryAPI
+        Library API endpoints client
+    catalog: applemusic.CatalogAPI
+        Catalog API endpoints client
+    playlist: applemusic.PlaylistAPI
+        Playlist API endpoints client
+    account: applemusic.AccountAPI
+        Account API endpoints client
+    """
+
     def __init__(
         self, developer_token, user_token=None, storefront=None, verify_ssl=True
     ) -> None:

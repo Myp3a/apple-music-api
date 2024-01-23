@@ -11,6 +11,8 @@ _log = logging.getLogger(__name__)
 
 
 class CatalogTypes(Enum):
+    """Available catalog search types."""
+
     Activities = "activities"
     Albums = "albums"
     AppleCurators = "apple-curators"
@@ -24,12 +26,26 @@ class CatalogTypes(Enum):
 
 
 class CatalogAPI:
+    """Catalog related API endpoints."""
+
     def __init__(self, client) -> None:
         self.client = client
 
     def search(
         self, query: str, return_type: CatalogTypes, limit: int = 5
     ) -> list[Song | Album | Artist | Playlist]:
+        """List[`Song`|`Album`|`Artist`|`Playlist`]: Returns search results.
+        Returned type is determined by `return_type` parameter.
+
+        Arguments
+        ---------
+        query: `str`
+            Search query.
+        return_type: `CatalogTypes`
+            What to search for.
+        limit: `int`
+            Limit for returned results. Can't be more than 25 internally.
+        """
         types = [return_type.value]
         query = query.replace(" ", "+")
         results = []
@@ -67,25 +83,50 @@ class CatalogAPI:
                 if url is None:
                     return results
 
-    def lyrics(self, song: Song) -> Lyrics:
+    def lyrics(self, song: Song) -> Lyrics | None:
+        """`Lyrics`: Returns lyrics for song.
+
+        Arguments
+        ---------
+        song: `Song`
+            Catalog song to search lyrics for.
+        """
         with self.client.session.get(
             self.client.session.base_url
             + f"/v1/catalog/{self.client.storefront}/songs/{song.id}/lyrics"
         ) as resp:
             js = resp.json()
             _log.debug("lyrics response: %s", js)
+            if js["data"] == []:
+                return None
             return Lyrics(**js["data"][0])
 
-    def get_by_id(self, song_id: str) -> Song:
+    def get_by_id(self, song_id: str) -> Song | None:
+        """`Song`: Returns a song by it's id.
+
+        Arguments
+        ---------
+        song_id: `str`
+            Song ID to search for.
+        """
         with self.client.session.get(
             self.client.session.base_url
             + f"/v1/catalog/{self.client.storefront}/songs/{song_id}"
         ) as resp:
             js = resp.json()
             _log.debug("get by id response: %s", js)
+            if js["data"] == []:
+                return None
             return Song(**js["data"][0])
 
-    def get_by_isrc(self, isrc: str) -> Song:
+    def get_by_isrc(self, isrc: str) -> Song | None:
+        """`Song`: Returns a song by it's ISRC.
+
+        Arguments
+        ---------
+        isrc: `str`
+            ISRC to search for.
+        """
         with self.client.session.get(
             self.client.session.base_url
             + f"/v1/catalog/{self.client.storefront}/songs",
@@ -93,4 +134,6 @@ class CatalogAPI:
         ) as resp:
             js = resp.json()
             _log.debug("get by isrc response: %s", js)
+            if js["data"] == []:
+                return None
             return Song(**js["data"][0])
