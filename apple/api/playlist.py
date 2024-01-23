@@ -10,17 +10,18 @@ class PlaylistAPI:
 
     def list_playlists(self) -> list[LibraryPlaylist]:
         playlists = []
-        next = True
-        while next:
-            with self.client.session.get(self.client.session.base_url + "/v1/me/library/playlists") as resp:
+        url = "/v1/me/library/playlists"
+        while True:
+            with self.client.session.get(
+                self.client.session.base_url + url
+            ) as resp:
                 js = resp.json()
                 for p in js["data"]:
                     playlist = LibraryPlaylist(**p)
                     playlists.append(playlist)
                 if url := js.get("next", False):
-                    next = True
+                    pass
                 else:
-                    next = False
                     return playlists
 
     def create_playlist(self, name, description="") -> LibraryPlaylist | bool:
@@ -28,12 +29,9 @@ class PlaylistAPI:
         with self.client.session.post(
             self.client.session.base_url + url,
             json={
-                "attributes": {
-                    "name": name,
-                    "description": description
-                },
-                "relationships": {"tracks": { "data": [] }},
-            }
+                "attributes": {"name": name, "description": description},
+                "relationships": {"tracks": {"data": []}},
+            },
         ) as resp:
             if resp.status_code == 201:
                 return LibraryPlaylist(**resp.json()["data"][0])
@@ -41,13 +39,18 @@ class PlaylistAPI:
                 return False
 
     def delete_playlist(self, playlist: LibraryPlaylist) -> bool:
-        with self.client.session.delete(self.client.session.base_url + f"/v1/me/library/playlists/{playlist.id}") as resp:
+        with self.client.session.delete(
+            self.client.session.base_url
+            + f"/v1/me/library/playlists/{playlist.id}"
+        ) as resp:
             if resp.status_code == 204:
                 return True
             else:
                 return False
 
-    def add_to_playlist(self, playlist: LibraryPlaylist, songs: list[Song|LibrarySong]) -> bool:
+    def add_to_playlist(
+        self, playlist: LibraryPlaylist, songs: list[Song | LibrarySong]
+    ) -> bool:
         tracks_to_add = []
         for s in songs:
             t = None
@@ -55,24 +58,28 @@ class PlaylistAPI:
                 t = CatalogTypes.Songs.value
             elif type(s) is LibrarySong:
                 t = LibraryTypes.Songs.value
-            tracks_to_add.append({"type":t, "id": s.id})
-        with self.client.session.post(self.client.session.base_url + f"/v1/me/library/playlists/{playlist.id}/tracks",
-                                      json={
-                                          "data": tracks_to_add
-                                        }
+            tracks_to_add.append({"type": t, "id": s.id})
+        with self.client.session.post(
+            self.client.session.base_url
+            + f"/v1/me/library/playlists/{playlist.id}/tracks",
+            json={"data": tracks_to_add},
         ) as resp:
             if resp.status_code == 201:
                 return True
             else:
                 return False
 
-    def list_tracks(self, playlist: LibraryPlaylist | Playlist) -> list[Song|LibrarySong]:
+    def list_tracks(
+        self, playlist: LibraryPlaylist | Playlist
+    ) -> list[Song | LibrarySong]:
         res = []
         if type(playlist) is LibraryPlaylist:
             url = f"/v1/me/library/playlists/{playlist.id}/tracks"
         elif type(playlist) is Playlist:
             url = f"/v1/catalog/{self.client.storefront}/playlists/{playlist.id}/tracks"
-        with self.client.session.get(self.client.session.base_url + url) as resp:
+        with self.client.session.get(
+            self.client.session.base_url + url
+        ) as resp:
             js = resp.json()
             tracks = js["data"]
             for t in tracks:

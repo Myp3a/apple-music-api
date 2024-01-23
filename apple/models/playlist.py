@@ -1,4 +1,5 @@
 from enum import Enum
+
 from pydantic import BaseModel, Field
 
 from apple.models.meta import Artwork, Notes, PlayParameters
@@ -10,6 +11,7 @@ class PlaylistTrackTypes(Enum):
     MusicVideos = "music-videos"
     Songs = "songs"
 
+
 class PlaylistType(Enum):
     Editorial = "editorial"
     External = "external"
@@ -17,17 +19,25 @@ class PlaylistType(Enum):
     Replay = "replay"
     UserShared = "user-shared"
 
+
 class PlaylistAttributes(BaseModel):
     artwork: Artwork = Artwork(**{})
     curator_name: str = Field(alias="curatorName")
     description: Notes = Notes(**{})
     is_chart: bool = Field(alias="isChart")
-    last_modified_date: str = Field(alias="lastModifiedDate", default="1970-01-01")
+    last_modified_date: str = Field(
+        alias="lastModifiedDate", default="1970-01-01"
+    )
     name: str
     playlist_type: PlaylistType = Field(alias="playlistType")
-    play_params: PlayParameters = Field(alias="playParams", default=PlayParameters(**{}))
-    track_types: PlaylistTrackTypes = Field(alias="trackTypes", default=PlaylistTrackTypes.Undefined)
+    play_params: PlayParameters = Field(
+        alias="playParams", default=PlayParameters(**{})
+    )
+    track_types: PlaylistTrackTypes = Field(
+        alias="trackTypes", default=PlaylistTrackTypes.Undefined
+    )
     url: str
+
 
 class Playlist(AppleMusicObject):
     attributes: PlaylistAttributes
@@ -38,6 +48,7 @@ class Playlist(AppleMusicObject):
     def __repr__(self) -> str:
         return f"<{self.__str__()} ({self.id})>"
 
+
 class LibraryPlaylistAttributes(BaseModel):
     artwork: Artwork = Artwork(**{})
     can_edit: bool = Field(alias="canEdit")
@@ -46,8 +57,13 @@ class LibraryPlaylistAttributes(BaseModel):
     has_catalog: bool = Field(alias="hasCatalog")
     is_public: bool = Field(alias="isPublic")
     name: str
-    play_params: PlayParameters = Field(alias="playParams", default=PlayParameters(**{}))
-    track_types: PlaylistTrackTypes = Field(alias="trackTypes", default=PlaylistTrackTypes.Undefined)
+    play_params: PlayParameters = Field(
+        alias="playParams", default=PlayParameters(**{})
+    )
+    track_types: PlaylistTrackTypes = Field(
+        alias="trackTypes", default=PlaylistTrackTypes.Undefined
+    )
+
 
 class LibraryPlaylist(AppleMusicObject):
     attributes: LibraryPlaylistAttributes

@@ -11,6 +11,7 @@ class ArtistAttributes(BaseModel):
     name: str
     url: str
 
+
 class Artist(AppleMusicObject):
     attributes: ArtistAttributes
 
@@ -20,8 +21,10 @@ class Artist(AppleMusicObject):
     def __repr__(self) -> str:
         return f"<{self.__str__()} ({self.id})>"
 
+
 class LibraryArtistAttributes(BaseModel):
     name: str
+
 
 class LibraryArtist(AppleMusicObject):
     attributes: LibraryArtistAttributes

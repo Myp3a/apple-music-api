@@ -1,6 +1,7 @@
 import logging
-import requests
 import time
+
+import requests
 
 from apple.api.account import AccountAPI
 from apple.api.catalog import CatalogAPI
@@ -9,6 +10,7 @@ from apple.api.playlist import PlaylistAPI
 from apple.errors import AppleMusicAPIException
 
 _log = logging.getLogger(__name__)
+
 
 class Session:
     def __init__(self, dev_token, user_token, verify_ssl) -> None:
@@ -19,7 +21,8 @@ class Session:
         self.session.headers["Music-User-Token"] = user_token
         self.base_url = "https://amp-api.music.apple.com"
 
-    def _request(self, func, *args, **kwargs) -> requests.Response:
+    def _request(self, func, *args, **kwargs) -> requests.Response:  # type: ignore
+        # TODO: drop out of loop if waiting for too long
         done = False
         while not done:
             _log.debug("Doing network request with %s", func)
@@ -34,7 +37,7 @@ class Session:
                 else:
                     done = True
                     return resp
-                
+
     def get(self, *args, **kwargs) -> requests.Response:
         return self._request(self.session.get, *args, **kwargs)
 
@@ -44,11 +47,14 @@ class Session:
     def delete(self, *args, **kwargs) -> requests.Response:
         return self._request(self.session.delete, *args, **kwargs)
 
+
 class ApiClient:
     def __init__(self, developer_token, user_token, verify_ssl=True) -> None:
         self.developer_token = developer_token
         self.user_token = user_token
-        self.session = Session(self.developer_token, self.user_token, verify_ssl)
+        self.session = Session(
+            self.developer_token, self.user_token, verify_ssl
+        )
         self.library = LibraryAPI(self)
         self.catalog = CatalogAPI(self)
         self.playlist = PlaylistAPI(self)

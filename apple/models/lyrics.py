@@ -7,8 +7,11 @@ from apple.models.object import AppleMusicObject
 
 
 class LyricsAttributes(BaseModel):
-    play_params: PlayParameters = Field(alias="playParams", default=PlayParameters(**{}))
+    play_params: PlayParameters = Field(
+        alias="playParams", default=PlayParameters(**{})
+    )
     ttml: str
+
 
 class Lyrics(AppleMusicObject):
     attributes: LyricsAttributes

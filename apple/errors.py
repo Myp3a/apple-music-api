@@ -5,6 +5,7 @@ class ErrorSource(BaseModel):
     parameter: str = ""
     pointer: str = ""
 
+
 class AppleMusicAPIException(Exception):
     def __init__(self, data, *args: object) -> None:
         super().__init__(*args)
