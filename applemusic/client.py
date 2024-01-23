@@ -49,7 +49,9 @@ class Session:
 
 
 class ApiClient:
-    def __init__(self, developer_token, user_token, verify_ssl=True) -> None:
+    def __init__(
+        self, developer_token, user_token=None, storefront=None, verify_ssl=True
+    ) -> None:
         self.developer_token = developer_token
         self.user_token = user_token
         self.session = Session(
@@ -59,4 +61,16 @@ class ApiClient:
         self.catalog = CatalogAPI(self)
         self.playlist = PlaylistAPI(self)
         self.account = AccountAPI(self)
-        self.storefront = self.account.subscription().storefront
+        if self.user_token:
+            if storefront is None:
+                self.storefront = self.account.subscription().storefront
+            else:
+                self.storefront = storefront
+        else:
+            _log.warning(
+                "No Music User Token provided, library functions unavailable"
+            )
+            assert (
+                storefront is not None
+            ), "Provide either Music User Token or storefront"
+            self.storefront = storefront
