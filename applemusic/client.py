@@ -7,6 +7,7 @@ import requests
 from applemusic.api.account import AccountAPI
 from applemusic.api.catalog import CatalogAPI
 from applemusic.api.library import LibraryAPI
+from applemusic.api.playback import PlaybackAPI
 from applemusic.api.playlist import PlaylistAPI
 from applemusic.errors import AppleMusicAPIException
 
@@ -116,6 +117,7 @@ class ApiClient:
         self.catalog = CatalogAPI(self)
         self.playlist = PlaylistAPI(self)
         self.account = AccountAPI(self)
+        self.playback = PlaybackAPI(self)
         if self.user_token:
             if storefront is None:
                 self.storefront = self.account.subscription().storefront
