@@ -9,6 +9,8 @@ _log = logging.getLogger(__name__)
 
 
 class PlaylistAPI:
+    """Playlist related API endpoints."""
+
     def __init__(self, client) -> None:
         self.client = client
 

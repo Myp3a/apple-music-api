@@ -28,6 +28,8 @@ class LibraryTypes(Enum):
 
 
 class LibraryAPI:
+    """Library related API endpoints."""
+
     def __init__(self, client: ApiClient) -> None:
         self.client = client
 
