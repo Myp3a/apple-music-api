@@ -24,11 +24,13 @@ class Artwork(BaseModel):
 class AudioVariants(Enum):
     """Available audio qualities."""
 
+    Atmos = "atmos"
     DolbyAtmos = "dolby-atmos"
     DolbyAudio = "dolby-audio"
     HiResLossless = "hi-res-lossless"
     Lossless = "lossless"
     LossyStereo = "lossy-stereo"
+    Spatial = "spatial"
 
 
 class ContentRating(Enum):
