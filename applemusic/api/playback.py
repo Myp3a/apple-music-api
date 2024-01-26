@@ -9,6 +9,7 @@ import m3u8
 from pywidevine import PSSH, Cdm, Device
 from pywidevine.license_protocol_pb2 import WidevinePsshData
 
+from applemusic.decrypt import decrypt
 from applemusic.models.song import Song
 
 if TYPE_CHECKING:
@@ -87,7 +88,7 @@ class PlaybackAPI:
             return js["license"]
 
     def get_decryption_key(self, track_url, track_id):
-        """`str`: Returns a hex encoded key for track.
+        """`bytes`: Returns a key for track.
 
         Needs a Widevine device file.
         """
@@ -107,10 +108,10 @@ class PlaybackAPI:
             key
             for key in self.cdm.get_keys(self.cdm_session)
             if key.type == "CONTENT"
-        ).key.hex()
+        ).key
 
-    def get_encrypted_audio_with_key(self, song: Song) -> Tuple[bytes, str]:
-        """`str`: Returns (`bytes`,`str`) tuple of raw encrypted music data and decryption key.
+    def get_encrypted_audio_with_key(self, song: Song) -> Tuple[bytes, bytes]:
+        """(`bytes`,`bytes`): Returns tuple of raw encrypted music data and decryption key.
 
         Needs a Music User Token.
 
@@ -123,8 +124,21 @@ class PlaybackAPI:
         playlist = m3u8.load(url)
         path = url.replace(url.split("/")[-1], "") + "/"
         part_url = playlist.segments[0]
-        res_buf = io.BytesIO()
         with self.client.session.get(path + part_url.uri) as resp:
-            res_buf.write(resp.content)
-            res_buf.seek(0)
-        return res_buf.getbuffer(), key
+            return resp.content, key
+
+    def get_decrypted_audio(self, song: Song):
+        """`bytes`: Returns raw decrypted music data.
+
+        Needs a Music User Token.
+
+        Needs a Widevine device file.
+        """
+        encrypted, key = self.get_encrypted_audio_with_key(song)
+        inp_buf = io.BytesIO()
+        out_buf = io.BytesIO()
+        inp_buf.write(encrypted)
+        inp_buf.seek(0)
+        decrypt(key, inp_buf, out_buf)
+        out_buf.seek(0)
+        return out_buf.getbuffer()
