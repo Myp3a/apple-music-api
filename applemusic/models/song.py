@@ -5,6 +5,7 @@ from typing import TYPE_CHECKING
 from pydantic import BaseModel, Field
 
 from applemusic.models.album import Album
+from applemusic.models.artist import Artist
 from applemusic.models.meta import (
     Artwork,
     AudioVariants,
@@ -173,6 +174,17 @@ class Song(AppleMusicObject):
             Album,
         )
         return album
+
+    def artist(self) -> Album:
+        assert isinstance(
+            (
+                artist := self._client.catalog.get_by_id(
+                    self.relationships.artists.data[0].id, CatalogTypes.Artists
+                )
+            ),
+            Artist,
+        )
+        return artist
 
     def audio(self) -> bytes:
         """`bytes`: Returns raw decrypted music data.
