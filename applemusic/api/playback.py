@@ -31,10 +31,16 @@ class PlaybackAPI:
         )
         self.license_url = "https://play.itunes.apple.com/WebObjects/MZPlay.woa/wa/acquireWebPlaybackLicense"
         self.default_flavor = "28:ctrp256"
-        self.cdm = Cdm.from_device(
-            Device.load(self.client.widevine_device_path)
-        )
-        self.cdm_session = self.cdm.open()
+        try:
+            self.cdm = Cdm.from_device(
+                Device.load(self.client.widevine_device_path)
+            )
+            self.cdm_session = self.cdm.open()
+        except FileNotFoundError:
+            _log.warning(
+                "No Widevine Device File found, audio downloads will be"
+                " unavailable"
+            )
 
     def get_webplayback(self, song: Song) -> dict:
         """`dict`: Returns a song object with playback streams.

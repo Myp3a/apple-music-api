@@ -83,7 +83,11 @@ class ApiClient:
     developer_token: str
         Apple Developer token.
     user_token: str | None
-        Music User Token for library interaction. If None, only free API will be available.
+        Music User Token for library interaction.
+        If None, only free API will be available.
+    widevine_device_path: str
+        Widevine Device File for media decryption.
+        If doesn't exist, audio downloads will be unavailable.
     storefront: str | None
         Specific storefront for catalog requests. Auto-detects by default.
     verify_ssl: bool
@@ -103,6 +107,8 @@ class ApiClient:
         Playlist API endpoints client
     account: applemusic.AccountAPI
         Account API endpoints client
+    playback: applemusic.PlaybackAPI
+        Playback API endpoints client
     """
 
     def __init__(
