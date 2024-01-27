@@ -170,3 +170,65 @@ class LibraryAPI:
                 return True
             else:
                 return False
+
+    def favorite(self, object_to_favorite: AppleMusicObject) -> bool:
+        """`bool`: Favorites an object in user music library.
+
+        Needs a Music User Token.
+
+        Arguments
+        ---------
+        object_to_favorite: `AppleMusicObject`
+            Object to favorite. Can be either `Song`, `Album`, `Artist` or `Playlist`.
+        """
+        item_type = None
+        match object_to_favorite:
+            case Song():
+                item_type = CatalogTypes.Songs.value
+            case Album():
+                item_type = CatalogTypes.Albums.value
+            case Artist():
+                item_type = CatalogTypes.Artists.value
+            case Playlist():
+                item_type = CatalogTypes.Playlists.value
+        with self.client.session.post(
+            self.client.session.base_url + "/v1/me/favorites",
+            params={f"ids[{item_type}]": object_to_favorite.id},
+        ) as resp:
+            if resp.text != "":
+                _log.debug("favorites add response: %s", resp.json())
+            if resp.status_code == 202:
+                return True
+            else:
+                return False
+
+    def unfavorite(self, object_to_delete: AppleMusicObject) -> bool:
+        """`bool`: Removes an object from user's favorites.
+
+        Needs a Music User Token.
+
+        Arguments
+        ---------
+        object_to_delete: `AppleMusicObject`
+            Object to delete from favorites. Can be either `Song`, `Album`, `Artist` or `Playlist`.
+        """
+        item_type = None
+        match object_to_delete:
+            case Song():
+                item_type = CatalogTypes.Songs.value
+            case Album():
+                item_type = CatalogTypes.Albums.value
+            case Artist():
+                item_type = CatalogTypes.Artists.value
+            case Playlist():
+                item_type = CatalogTypes.Playlists.value
+        with self.client.session.delete(
+            self.client.session.base_url + "/v1/me/favorites",
+            params={f"ids[{item_type}]": object_to_delete.id},
+        ) as resp:
+            if resp.text != "":
+                _log.debug("favorites remove response: %s", resp.json())
+            if resp.status_code == 204:
+                return True
+            else:
+                return False
