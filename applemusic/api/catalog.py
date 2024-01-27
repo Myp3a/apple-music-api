@@ -1,4 +1,7 @@
+from __future__ import annotations
+
 import logging
+from typing import TYPE_CHECKING
 
 from applemusic.models.album import Album
 from applemusic.models.artist import Artist
@@ -7,13 +10,16 @@ from applemusic.models.meta import CatalogTypes
 from applemusic.models.playlist import Playlist
 from applemusic.models.song import Song
 
+if TYPE_CHECKING:
+    from applemusic.client import ApiClient
+
 _log = logging.getLogger(__name__)
 
 
 class CatalogAPI:
     """Catalog related API endpoints."""
 
-    def __init__(self, client) -> None:
+    def __init__(self, client: ApiClient) -> None:
         self.client = client
 
     def search(

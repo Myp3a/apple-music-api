@@ -1,8 +1,14 @@
+from __future__ import annotations
+
 import logging
+from typing import TYPE_CHECKING
 
 from applemusic.models.meta import CatalogTypes, LibraryTypes
 from applemusic.models.playlist import LibraryPlaylist, Playlist
 from applemusic.models.song import LibrarySong, Song
+
+if TYPE_CHECKING:
+    from applemusic.client import ApiClient
 
 _log = logging.getLogger(__name__)
 
@@ -10,7 +16,7 @@ _log = logging.getLogger(__name__)
 class PlaylistAPI:
     """Playlist related API endpoints."""
 
-    def __init__(self, client) -> None:
+    def __init__(self, client: ApiClient) -> None:
         self.client = client
 
     def list_playlists(self) -> list[LibraryPlaylist]:

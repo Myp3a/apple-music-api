@@ -3,7 +3,7 @@ from __future__ import annotations
 import base64
 import io
 import logging
-from typing import TYPE_CHECKING, Tuple
+from typing import TYPE_CHECKING
 
 import m3u8
 from pywidevine import PSSH, Cdm, Device
@@ -117,7 +117,7 @@ class PlaybackAPI:
             if key.type == "CONTENT"
         ).key
 
-    def get_encrypted_audio_with_key(self, song: Song) -> Tuple[bytes, bytes]:
+    def get_encrypted_audio_with_key(self, song: Song) -> tuple[bytes, bytes]:
         """(`bytes`,`bytes`): Returns tuple of raw encrypted music data and decryption key.
 
         Needs a Music User Token.

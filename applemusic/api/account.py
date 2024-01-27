@@ -1,7 +1,13 @@
+from __future__ import annotations
+
 import logging
 from enum import Enum
+from typing import TYPE_CHECKING
 
 from applemusic.models.meta import Subscription
+
+if TYPE_CHECKING:
+    from applemusic.client import ApiClient
 
 _log = logging.getLogger(__name__)
 
@@ -15,7 +21,7 @@ class MetaKeys(Enum):
 class AccountAPI:
     """Account related API endpoints."""
 
-    def __init__(self, client) -> None:
+    def __init__(self, client: ApiClient) -> None:
         self.client = client
 
     def subscription(self) -> Subscription:
