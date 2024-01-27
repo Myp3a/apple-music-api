@@ -106,10 +106,16 @@ class ApiClient:
     """
 
     def __init__(
-        self, developer_token, user_token=None, storefront=None, verify_ssl=True
+        self,
+        developer_token,
+        user_token=None,
+        widevine_device_path="device.wvd",
+        storefront=None,
+        verify_ssl=True,
     ) -> None:
         self.developer_token = developer_token
         self.user_token = user_token
+        self.widevine_device_path = widevine_device_path
         self.session = Session(
             self.developer_token, self.user_token, verify_ssl
         )
