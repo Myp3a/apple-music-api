@@ -272,6 +272,7 @@ class Song(AppleMusicObject):
         return self._client.library.add(self)
 
     def album(self) -> Album:
+        """`Album`: Returns album containing the song."""
         assert isinstance(
             (
                 album := self._client.catalog.get_by_id(
@@ -283,6 +284,7 @@ class Song(AppleMusicObject):
         return album
 
     def artist(self) -> Album:
+        """`Artist`: Returns artist performing the song."""
         assert isinstance(
             (
                 artist := self._client.catalog.get_by_id(

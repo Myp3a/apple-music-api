@@ -1,8 +1,10 @@
 from pydantic import BaseModel, Field
 
+from applemusic.models.artist import Artist
 from applemusic.models.meta import (
     Artwork,
     AudioVariants,
+    CatalogTypes,
     ContentRating,
     Notes,
     PlayParameters,
@@ -178,6 +180,17 @@ class Album(AppleMusicObject):
 
     def __repr__(self) -> str:
         return f"<{self.__str__()} ({self.id})>"
+
+    def artist(self) -> list[Artist]:
+        """`Artist`: Returns artists performing the album."""
+        artists = []
+        for artist in self.relationships.artists.data:
+            catalog_artist = self._client.catalog.get_by_id(
+                artist.id, CatalogTypes.Artists
+            )
+            assert isinstance(catalog_artist, Artist)
+            artists.append(catalog_artist)
+        return artists
 
 
 class LibraryAlbumAttributes(BaseModel):
