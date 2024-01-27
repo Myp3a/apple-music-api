@@ -175,3 +175,23 @@ class PlaylistAPI:
                     pass
                 else:
                     return res
+
+    def in_playlist(
+        self, playlist: LibraryPlaylist | Playlist, song: LibrarySong | Song
+    ) -> bool:
+        """`bool`: If song is in specified playlist.
+
+        Could be slow.
+
+        Arguments
+        ---------
+        playlist: `LibraryPlaylist`|`Playlist`
+            Playlist to search in.
+        song: `LibrarySong`|`Song`
+            Song to search for.
+        """
+        tracks = self.list_tracks(playlist)
+        for t in tracks:
+            if t.id == song.id:
+                return True
+        return False

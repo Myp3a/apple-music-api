@@ -144,6 +144,22 @@ class Playlist(AppleMusicObject):
     def __repr__(self) -> str:
         return f"<{self.__str__()} ({self.id})>"
 
+    def list_songs(self) -> list[Song]:
+        """list[`Song`]: Returns a list of playlist songs."""
+        return self._client.playlist.list_tracks(self)
+
+    def has_song(self, song: Song) -> bool:
+        """`bool`: If playlist has specific song.
+
+        Could be slow.
+
+        Arguments
+        ---------
+        song: `Song`
+            Song to search for.
+        """
+        return self._client.playlist.in_playlist(self, song)
+
 
 class LibraryPlaylistAttributes(BaseModel):
     """Class that represents data about playlist.
@@ -288,3 +304,15 @@ class LibraryPlaylist(AppleMusicObject):
         Needs Music User Token.
         """
         return self._client.playlist.delete_playlist(self)
+
+    def has_song(self, song: LibrarySong) -> bool:
+        """`bool`: If playlist has specific song.
+
+        Could be slow.
+
+        Arguments
+        ---------
+        song: `LibrarySong`
+            Song to search for.
+        """
+        return self._client.playlist.in_playlist(self, song)
