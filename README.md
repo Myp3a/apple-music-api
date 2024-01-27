@@ -68,7 +68,7 @@ cli = applemusic.ApiClient(DEV_TOKEN, USER_TOKEN)
 songs = cli.library.search("Against The Current", LibraryTypes.Songs)
 song = songs[0]
 playlist = cli.playlist.create_playlist("My new playlist")
-cli.playlist.add_to_playlist(playlist, songs)
+playlist.add_to_playlist(song)
 ```
 Downloading a song
 ```Python
@@ -83,10 +83,10 @@ cli = applemusic.ApiClient(DEV_TOKEN, USER_TOKEN, widevine_device_file=WIDEVINE_
 
 songs = cli.library.search("TMNV", LibraryTypes.Songs)
 song = songs[0]
-catalog_song = cli.catalog.get_by_id(song.attributes.play_params.catalog_id)
+catalog_song = song.get_catalog_song()
 
 with open("song.m4a","wb") as outfile:
-    outfile.write(cli.playback.get_decrypted_audio(catalog_song))
+    outfile.write(catalog_song.audio())
 ```
 
 # TODO
