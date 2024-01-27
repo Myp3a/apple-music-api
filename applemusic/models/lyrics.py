@@ -8,13 +8,7 @@ from applemusic.models.object import AppleMusicObject
 
 class LyricsAttributes(BaseModel):
     """Class that represents lyrics data.
-
-    Attributes
-    ----------
-    play_params: `PlayParameters`
-        Parameters associated with playback.
-    ttml: `str`
-        TTML-encoded lyrics.
+    Not meant to be used directly.
     """
 
     play_params: PlayParameters = Field(
@@ -32,17 +26,23 @@ class Lyrics(AppleMusicObject):
         Unique artist ID.
     type: `str`
         Object type. Should be "lyrics".
-    attributes: `LyricsAttributes`
-        Lyrics data.
+    play_params: `PlayParameters`
+        Parameters associated with playback.
+    ttml: `str`
+        TTML-encoded lyrics.
     """
 
     attributes: LyricsAttributes
+
+    @property
+    def play_params(self) -> PlayParameters:
+        return self.attributes.play_params
 
     def __str__(self) -> str:
         return self.clean
 
     def __repr__(self) -> str:
-        return f"<{self.__str__()} ({self.id})>"
+        return f"<Lyrics ({self.id})>"
 
     @property
     def ttml(self) -> str:

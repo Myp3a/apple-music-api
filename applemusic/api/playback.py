@@ -50,7 +50,7 @@ class PlaybackAPI:
         with self.client.session.post(
             self.playback_url,
             json={
-                "salableAdamId": song.attributes.play_params.id,
+                "salableAdamId": song.play_params.id,
                 "language": "en-US",
             },
         ) as resp:
@@ -124,7 +124,7 @@ class PlaybackAPI:
 
         Needs a Widevine device file.
         """
-        track_id = song.attributes.play_params.id
+        track_id = song.play_params.id
         flavors = self.get_available_streams(song)
         url = flavors[self.default_flavor]
         key = self.get_decryption_key(url, track_id)

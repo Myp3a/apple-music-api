@@ -29,68 +29,7 @@ class SongPreview(BaseModel):
 
 class SongAttributes(BaseModel):
     """Class that represents data about song.
-
-    Attributes
-    ----------
-    album_name: `str`
-        Album name.
-    artist_name: `str`
-        Artist name.
-    artist_url: `str`
-        Album artist URL. Can be empty.
-    artwork: `Artwork`
-        Data about album artwork. Can be empty.
-    attribution: `str`
-        Classical only. Attributed composer name.
-    audio_locale: `str`
-        Language of the song.
-    audio_traits: List[`AudioVariants`]
-        Available album audio qualities. Can be undefined.
-    composer_name: `str`
-        Composer name.
-    content_rating: `ContentRating`
-        Content rating for album. Can be unrated.
-    disc_number: `int`
-        Disc number. Can be empty.
-    duration_in_millis: `int`
-        Duration in milliseconds.
-    editorial_notes: `Notes`
-        Editorial notes about album. Can be empty.
-    genre_names: List[`str`]
-        List of song genres.
-    has_credits: `bool`
-        If song has credits.
-    has_lyrics: `bool`
-        If song has lyrics.
-    has_time_synced_lyrics: `bool`
-        If song has timed lyrics.
-    is_apple_digital_master: `bool`
-        If song was encoded with Apple Digital Master.
-    is_vocal_attenuation_allowed: `bool`
-        If vocal removing is possible.
-    isrc: `str`
-        ISRC song code.
-    movement_count: `int`
-        Classical only. Movement count of the song.
-    movement_name: `str`
-        Classical only. Movement name of the song.
-    movement_number: `int`
-        Classical only. Movement number of the song.
-    name: `str`
-        Name of album.
-    play_params: `PlayParameters`
-        Parameters associated with playback.
-    previews: List[`SongPreview`]
-        List of song preview fragments.
-    release_date: `str`
-        Song release date in format YYYY-MM-DD. Can be in the future for pre-releases.
-        Can be undefined.
-    track_number: `int`
-        Album track number.
-    url: `str`
-        Album URL.
-    work_name: `str`
-        Classical only. Name of the associated work.
+    Not meant to be used directly.
     """
 
     album_name: str = Field(alias="albumName")
@@ -145,14 +84,183 @@ class Song(AppleMusicObject):
         Object type. Should be "songs".
     href: `str`
         Song url.
-    attributes: `SongAttributes`
-        Song data.
+    album_name: `str`
+        Album name.
+    artist_name: `str`
+        Artist name.
+    artist_url: `str`
+        Album artist URL. Can be empty.
+    artwork: `Artwork`
+        Data about album artwork. Can be empty.
+    attribution: `str`
+        Classical only. Attributed composer name.
+    audio_locale: `str`
+        Language of the song.
+    audio_traits: list[`AudioVariants`]
+        Available song audio qualities. Can be undefined.
+    composer_name: `str`
+        Composer name.
+    content_rating: `ContentRating`
+        Content rating for song. Can be unrated.
+    disc_number: `int`
+        Disc number. Can be empty.
+    duration_in_millis: `int`
+        Duration in milliseconds.
+    editorial_notes: `Notes`
+        Editorial notes about song. Can be empty.
+    genre_names: list[`str`]
+        List of song genres.
+    has_credits: `bool`
+        If song has credits.
+    has_lyrics: `bool`
+        If song has lyrics.
+    has_time_synced_lyrics: `bool`
+        If song has timed lyrics.
+    is_apple_digital_master: `bool`
+        If song was encoded with Apple Digital Master.
+    is_vocal_attenuation_allowed: `bool`
+        If vocal removing is possible.
+    isrc: `str`
+        ISRC song code.
+    movement_count: `int`
+        Classical only. Movement count of the song.
+    movement_name: `str`
+        Classical only. Movement name of the song.
+    movement_number: `int`
+        Classical only. Movement number of the song.
+    name: `str`
+        Name of song.
+    play_params: `PlayParameters`
+        Parameters associated with playback.
+    previews: list[`SongPreview`]
+        List of song preview fragments.
+    release_date: `str`
+        Song release date in format YYYY-MM-DD. Can be in the future for pre-releases.
+        Can be undefined.
+    track_number: `int`
+        Album track number.
+    url: `str`
+        Song URL.
+    work_name: `str`
+        Classical only. Name of the associated work.
     """
 
     attributes: SongAttributes
 
+    @property
+    def album_name(self) -> str:
+        return self.attributes.album_name
+
+    @property
+    def artist_name(self) -> str:
+        return self.attributes.artist_name
+
+    @property
+    def artist_url(self) -> str:
+        return self.attributes.artist_url
+
+    @property
+    def artwork(self) -> Artwork:
+        return self.attributes.artwork
+
+    @property
+    def audio_locale(self) -> str:
+        return self.attributes.audio_locale
+
+    @property
+    def audio_traits(self) -> list[AudioVariants]:
+        return self.attributes.audio_traits
+
+    @property
+    def composer_name(self) -> str:
+        return self.attributes.composer_name
+
+    @property
+    def content_rating(self) -> ContentRating:
+        return self.attributes.content_rating
+
+    @property
+    def disc_number(self) -> int:
+        return self.attributes.disc_number
+
+    @property
+    def duration_in_millis(self) -> int:
+        return self.attributes.duration_in_millis
+
+    @property
+    def editorial_notes(self) -> Notes:
+        return self.attributes.editorial_notes
+
+    @property
+    def genre_names(self) -> list[str]:
+        return self.attributes.genre_names
+
+    @property
+    def has_credits(self) -> bool:
+        return self.attributes.has_credits
+
+    @property
+    def has_lyrics(self) -> bool:
+        return self.attributes.has_lyrics
+
+    @property
+    def has_time_synced_lyrics(self) -> bool:
+        return self.attributes.has_time_synced_lyrics
+
+    @property
+    def is_apple_digital_master(self) -> bool:
+        return self.attributes.is_apple_digital_master
+
+    @property
+    def is_vocal_attenuation_allowed(self) -> bool:
+        return self.attributes.is_vocal_attenuation_allowed
+
+    @property
+    def isrc(self) -> str:
+        return self.attributes.isrc
+
+    @property
+    def movement_count(self) -> int:
+        return self.attributes.movement_count
+
+    @property
+    def movement_name(self) -> str:
+        return self.attributes.movement_name
+
+    @property
+    def movement_number(self) -> int:
+        return self.attributes.movement_number
+
+    @property
+    def name(self) -> str:
+        return self.attributes.name
+
+    @property
+    def play_params(self) -> PlayParameters:
+        return self.attributes.play_params
+
+    @property
+    def previews(self) -> list[SongPreview]:
+        return self.attributes.previews
+
+    @property
+    def release_date(self) -> str:
+        return self.attributes.release_date
+
+    @property
+    def track_number(self) -> int:
+        return self.attributes.track_number
+
+    @property
+    def url(self) -> str:
+        return self.attributes.url
+
+    @property
+    def work_name(self) -> str:
+        return self.attributes.work_name
+
     def __str__(self) -> str:
-        return f"Song {self.attributes.artist_name} - {self.attributes.name}"
+        return f"Song {self.artist_name} - {self.name}"
 
     def __repr__(self) -> str:
         return f"<{self.__str__()} ({self.id})>"
@@ -207,15 +315,12 @@ class Song(AppleMusicObject):
         """
         if fast:
             songs = self._client.library.search(
-                self.attributes.artist_name, LibraryTypes.Songs, limit=25
+                self.artist_name, LibraryTypes.Songs, limit=25
             )
         else:
             songs = self._client.library.songs()
         for song in songs:
-            if (
-                song.attributes.play_params.catalog_id
-                == self.attributes.play_params.id
-            ):
+            if song.play_params.catalog_id == self.play_params.id:
                 return song
         return None
 
@@ -240,34 +345,7 @@ class Song(AppleMusicObject):
 
 class LibrarySongAttributes(BaseModel):
     """Class that represents data about library song.
-
-    Attributes
-    ----------
-    album_name: `str`
-        Album name. Can be empty.
-    artist_name: `str`
-        Artist name. Can be empty.
-    artwork: `Artwork`
-        Data about album artwork. Can be empty.
-    content_rating: `ContentRating`
-        Content rating for album. Can be unrated.
-    disc_number: `int`
-        Disc number. Can be empty.
-    duration_in_millis: `int`
-        Duration in milliseconds.
-    genre_names: List[`str`]
-        List of song genres.
-    has_lyrics: `bool`
-        If song has lyrics.
-    name: `str`
-        Name of album.
-    play_params: `PlayParameters`
-        Parameters associated with playback.
-    release_date: `str`
-        Song release date in format YYYY-MM-DD. Can be in the future for pre-releases.
-        Can be undefined.
-    track_number: `int`
-        Album track number.
+    Not meant to be used directly.
     """
 
     album_name: str = Field(alias="albumName", default="")
@@ -299,17 +377,85 @@ class LibrarySong(AppleMusicObject):
         Object type. Should be "library-songs".
     href: `str`
         Song url.
-    attributes: `LibrarySongAttributes`
-        Song data.
+    album_name: `str`
+        Album name. Can be empty.
+    artist_name: `str`
+        Artist name. Can be empty.
+    artwork: `Artwork`
+        Data about album artwork. Can be empty.
+    content_rating: `ContentRating`
+        Content rating for album. Can be unrated.
+    disc_number: `int`
+        Disc number. Can be empty.
+    duration_in_millis: `int`
+        Duration in milliseconds.
+    genre_names: List[`str`]
+        List of song genres.
+    has_lyrics: `bool`
+        If song has lyrics.
+    name: `str`
+        Name of album.
+    play_params: `PlayParameters`
+        Parameters associated with playback.
+    release_date: `str`
+        Song release date in format YYYY-MM-DD. Can be in the future for pre-releases.
+        Can be undefined.
+    track_number: `int`
+        Album track number.
     """
 
     attributes: LibrarySongAttributes
 
+    @property
+    def album_name(self) -> str:
+        return self.attributes.album_name
+
+    @property
+    def artist_name(self) -> str:
+        return self.attributes.artist_name
+
+    @property
+    def artwork(self) -> Artwork:
+        return self.attributes.artwork
+
+    @property
+    def content_rating(self) -> ContentRating:
+        return self.attributes.content_rating
+
+    @property
+    def disc_number(self) -> int:
+        return self.attributes.disc_number
+
+    @property
+    def duration_in_millis(self) -> int:
+        return self.attributes.duration_in_millis
+
+    @property
+    def genre_names(self) -> list[str]:
+        return self.attributes.genre_names
+
+    @property
+    def has_lyrics(self) -> bool:
+        return self.attributes.has_lyrics
+
+    @property
+    def name(self) -> str:
+        return self.attributes.name
+
+    @property
+    def play_params(self) -> PlayParameters:
+        return self.attributes.play_params
+
+    @property
+    def release_date(self) -> str:
+        return self.attributes.release_date
+
+    @property
+    def track_number(self) -> int:
+        return self.attributes.track_number
+
     def __str__(self) -> str:
-        return (
-            f"LibrarySong {self.attributes.artist_name} -"
-            f" {self.attributes.name}"
-        )
+        return f"LibrarySong {self.artist_name} - {self.name}"
 
     def __repr__(self) -> str:
         return f"<{self.__str__()} ({self.id})>"
@@ -327,7 +473,7 @@ class LibrarySong(AppleMusicObject):
 
     def get_catalog_song(self) -> Song | None:
         """`Song`|`None`: Returns corresponding catalog song, `None` if not exists."""
-        if (catalog_id := self.attributes.play_params.catalog_id) == "":
+        if (catalog_id := self.play_params.catalog_id) == "":
             return None
         return self._client.catalog.get_by_id(catalog_id, CatalogTypes.Songs)
 

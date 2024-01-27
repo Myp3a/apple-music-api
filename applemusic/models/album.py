@@ -12,48 +12,7 @@ from applemusic.models.object import AppleMusicObject
 
 class AlbumAttributes(BaseModel):
     """Class that represents data about music album.
-
-    Attributes
-    ----------
-    artist_name: `str`
-        Album artist name.
-    artist_url: `str`
-        Album artist URL. Can be empty.
-    artwork: `Artwork`
-        Data about album artwork. Can be empty.
-    audio_traits: List[`AudioVariants`]
-        Available album audio qualities. Can be undefined.
-    content_rating: `ContentRating`
-        Content rating for album. Can be unrated.
-    copyright: `str`
-        Copyright label. Can be empty.
-    editorial_notes: `Notes`
-        Editorial notes about album. Can be empty.
-    genre_names: List[`str`]
-        List of album genres.
-    is_compilation: `bool`
-        If album is a compilation.
-    is_complete: `bool`
-        If album has all tracks from it.
-    is_mastered_for_itunes: `bool`
-        If album was encoded with Apple Digital Master.
-    is_single: `bool`
-        If album is single.
-    name: `str`
-        Name of album.
-    play_params: `PlayParameters`
-        Parameters associated with playback.
-    record_label: `str`
-        Record label. Can be empty.
-    release_date: `str`
-        Album release date in format YYYY-MM-DD. Can be in the future for pre-releases.
-        Can be undefined.
-    track_count: `int`
-        Album track count.
-    upc: `str`
-        UPC album code. Can be empty.
-    url: `str`
-        Album URL.
+    Not meant to be used directly.
     """
 
     artist_name: str = Field(alias="artistName")
@@ -95,14 +54,127 @@ class Album(AppleMusicObject):
         Object type. Should be "albums".
     href: `str`
         Album url.
-    attributes: `AlbumAttributes`
-        Album data.
+    artist_name: `str`
+        Album artist name.
+    artist_url: `str`
+        Album artist URL. Can be empty.
+    artwork: `Artwork`
+        Data about album artwork. Can be empty.
+    audio_traits: list[`AudioVariants`]
+        Available album audio qualities. Can be undefined.
+    content_rating: `ContentRating`
+        Content rating for album. Can be unrated.
+    copyright: `str`
+        Copyright label. Can be empty.
+    editorial_notes: `Notes`
+        Editorial notes about album. Can be empty.
+    genre_names: list[`str`]
+        List of album genres.
+    is_compilation: `bool`
+        If album is a compilation.
+    is_complete: `bool`
+        If album has all tracks from it.
+    is_mastered_for_itunes: `bool`
+        If album was encoded with Apple Digital Master.
+    is_single: `bool`
+        If album is single.
+    name: `str`
+        Name of album.
+    play_params: `PlayParameters`
+        Parameters associated with playback.
+    record_label: `str`
+        Record label. Can be empty.
+    release_date: `str`
+        Album release date in format YYYY-MM-DD. Can be in the future for pre-releases.
+        Can be undefined.
+    track_count: `int`
+        Album track count.
+    upc: `str`
+        UPC album code. Can be empty.
+    url: `str`
+        Album URL.
     """
 
     attributes: AlbumAttributes
 
+    @property
+    def artist_name(self) -> str:
+        return self.attributes.artist_name
+
+    @property
+    def artist_url(self) -> str:
+        return self.attributes.artist_url
+
+    @property
+    def artwork(self) -> Artwork:
+        return self.attributes.artwork
+
+    @property
+    def audio_traits(self) -> list[AudioVariants]:
+        return self.attributes.audio_traits
+
+    @property
+    def content_rating(self) -> ContentRating:
+        return self.attributes.content_rating
+
+    @property
+    def copyright(self) -> str:
+        return self.attributes.copyright
+
+    @property
+    def editorial_notes(self) -> Notes:
+        return self.attributes.editorial_notes
+
+    @property
+    def genre_names(self) -> list[str]:
+        return self.attributes.genre_names
+
+    @property
+    def is_compilation(self) -> bool:
+        return self.attributes.is_compilation
+
+    @property
+    def is_complete(self) -> bool:
+        return self.attributes.is_complete
+
+    @property
+    def is_mastered_for_itunes(self) -> bool:
+        return self.attributes.is_mastered_for_itunes
+
+    @property
+    def is_single(self) -> bool:
+        return self.attributes.is_single
+
+    @property
+    def name(self) -> str:
+        return self.attributes.name
+
+    @property
+    def play_params(self) -> PlayParameters:
+        return self.attributes.play_params
+
+    @property
+    def record_label(self) -> str:
+        return self.attributes.record_label
+
+    @property
+    def release_date(self) -> str:
+        return self.attributes.release_date
+
+    @property
+    def track_count(self) -> int:
+        return self.attributes.track_count
+
+    @property
+    def upc(self) -> str:
+        return self.attributes.upc
+
+    @property
+    def url(self) -> str:
+        return self.attributes.url
+
     def __str__(self) -> str:
-        return f"Album {self.attributes.name} - {self.attributes.artist_name}"
+        return f"Album {self.name} - {self.artist_name}"
 
     def __repr__(self) -> str:
         return f"<{self.__str__()} ({self.id})>"
@@ -110,28 +182,7 @@ class Album(AppleMusicObject):
 
 class LibraryAlbumAttributes(BaseModel):
     """Class that represents data about music album.
-
-    Attributes
-    ----------
-    artist_name: `str`
-        Album artist name.
-    artwork: `Artwork`
-        Data about album artwork. Can be empty.
-    content_rating: `ContentRating`
-        Content rating for album. Can be unrated.
-    date_added: `str`
-        Album addition date in format YYYY-MM-DD.
-    genre_names: List[`str`]
-        List of album genres.
-    name: `str`
-        Name of album.
-    play_params: `PlayParameters`
-        Parameters associated with playback.
-    release_date: `str`
-        Album release date in format YYYY-MM-DD. Can be in the future for pre-releases.
-        Can be undefined.
-    track_count: `int`
-        Album track count.
+    Not meant to be used directly.
     """
 
     artist_name: str = Field(alias="artistName")
@@ -158,14 +209,67 @@ class LibraryAlbum(AppleMusicObject):
         Object type. Should be "library-albums".
     href: `str`
         Album url.
-    attributes: `LibraryAlbumAttributes`
-        Album data.
+    artist_name: `str`
+        Album artist name.
+    artwork: `Artwork`
+        Data about album artwork. Can be empty.
+    content_rating: `ContentRating`
+        Content rating for album. Can be unrated.
+    date_added: `str`
+        Album addition date in format YYYY-MM-DD.
+    genre_names: List[`str`]
+        List of album genres.
+    name: `str`
+        Name of album.
+    play_params: `PlayParameters`
+        Parameters associated with playback.
+    release_date: `str`
+        Album release date in format YYYY-MM-DD. Can be in the future for pre-releases.
+        Can be undefined.
+    track_count: `int`
+        Album track count.
     """
 
     attributes: LibraryAlbumAttributes
 
+    @property
+    def artist_name(self) -> str:
+        return self.attributes.artist_name
+
+    @property
+    def artwork(self) -> Artwork:
+        return self.attributes.artwork
+
+    @property
+    def content_rating(self) -> ContentRating:
+        return self.attributes.content_rating
+
+    @property
+    def date_added(self) -> str:
+        return self.attributes.date_added
+
+    @property
+    def genre_names(self) -> list[str]:
+        return self.attributes.genre_names
+
+    @property
+    def name(self) -> str:
+        return self.attributes.name
+
+    @property
+    def play_params(self) -> PlayParameters:
+        return self.attributes.play_params
+
+    @property
+    def release_date(self) -> str:
+        return self.attributes.release_date
+
+    @property
+    def track_count(self) -> int:
+        return self.attributes.track_count
+
     def __str__(self) -> str:
-        return f"Album {self.attributes.name} - {self.attributes.artist_name}"
+        return f"Album {self.name} - {self.artist_name}"
 
     def __repr__(self) -> str:
         return f"<{self.__str__()} ({self.id})>"

@@ -6,19 +6,7 @@ from applemusic.models.object import AppleMusicObject
 
 class ArtistAttributes(BaseModel):
     """Class that represents data about music artist.
-
-    Attributes
-    ----------
-    artwork: `Artwork`
-        Data about artist artwork. Can be empty.
-    editorial_notes: `Notes`
-        Editorial notes about artist. Can be empty.
-    genre_names: List[`str`]
-        List of artist genres.
-    name: `str`
-        Artist name.
-    url: `str`
-        Artist URL.
+    Not meant to be used directly.
     """
 
     artwork: Artwork = Artwork(**{})
@@ -39,14 +27,42 @@ class Artist(AppleMusicObject):
         Object type. Should be "artists".
     href: `str`
         Artist url.
-    attributes: `ArtistAttributes`
-        Artist data.
+    artwork: `Artwork`
+        Data about artist artwork. Can be empty.
+    editorial_notes: `Notes`
+        Editorial notes about artist. Can be empty.
+    genre_names: list[`str`]
+        List of artist genres.
+    name: `str`
+        Artist name.
+    url: `str`
+        Artist URL.
     """
 
     attributes: ArtistAttributes
 
+    @property
+    def artwork(self) -> Artwork:
+        return self.attributes.artwork
+
+    @property
+    def editorial_notes(self) -> Notes:
+        return self.attributes.editorial_notes
+
+    @property
+    def genre_names(self) -> list[str]:
+        return self.attributes.artwork
+
+    @property
+    def name(self) -> str:
+        return self.attributes.name
+
+    @property
+    def url(self) -> str:
+        return self.attributes.url
+
     def __str__(self) -> str:
-        return f"Artist {self.attributes.name}"
+        return f"Artist {self.name}"
 
     def __repr__(self) -> str:
         return f"<{self.__str__()} ({self.id})>"
@@ -54,11 +70,7 @@ class Artist(AppleMusicObject):
 
 class LibraryArtistAttributes(BaseModel):
     """Class that represents data about library music artist.
-
-    Attributes
-    ----------
-    name: `str`
-        Artist name.
+    Not meant to be used directly.
     """
 
     name: str
@@ -75,14 +87,18 @@ class LibraryArtist(AppleMusicObject):
         Object type. Should be "library-artists".
     href: `str`
         Artist url.
-    attributes: `LibraryArtistAttributes`
-        Artist data.
+    name: `str`
+        Artist name.
     """
 
     attributes: LibraryArtistAttributes
 
+    @property
+    def name(self) -> str:
+        return self.attributes.name
+
     def __str__(self) -> str:
-        return f"LibraryArtist {self.attributes.name}"
+        return f"LibraryArtist {self.name}"
 
     def __repr__(self) -> str:
         return f"<{self.__str__()} ({self.id})>"

@@ -23,7 +23,7 @@ class AppleMusicObject(BaseModel):
         URL.
     attributes: `ArtistAttributes`
         Specific data.
-    relationships: `dict`
+    relationships: `Relationships`
         Relationships to other objects.
     views: `dict`
         ?
