@@ -161,6 +161,15 @@ class Song(AppleMusicObject):
         """
         return self._client.library.add(self)
 
+    def audio(self) -> bytes:
+        """`bytes`: Returns raw decrypted music data.
+
+        Needs a Music User Token.
+
+        Needs a Widevine device file.
+        """
+        return self._client.playback.get_decrypted_audio(self)
+
     def get_library_song(self, fast=True) -> LibrarySong | None:
         """`LibrarySong`|`None`: Returns matching song in user library.
 
@@ -279,6 +288,17 @@ class LibrarySong(AppleMusicObject):
 
     def __repr__(self) -> str:
         return f"<{self.__str__()} ({self.id})>"
+
+    def audio(self) -> bytes | None:
+        """`bytes`: Returns raw decrypted music data.
+
+        Needs a Music User Token.
+
+        Needs a Widevine device file.
+        """
+        if (catalog_song := self.get_catalog_song()) is not None:
+            return self._client.playback.get_decrypted_audio(catalog_song)
+        return None
 
     def get_catalog_song(self) -> Song | None:
         """`Song`|`None`: Returns corresponding catalog song, `None` if not exists."""
