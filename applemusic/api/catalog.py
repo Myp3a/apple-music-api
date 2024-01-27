@@ -85,7 +85,9 @@ class CatalogAPI:
                 return None
             return Lyrics(self.client, **js["data"][0])
 
-    def get_by_id(self, song_id: str) -> Song | None:
+    def get_by_id(
+        self, object_id: str, object_type: CatalogTypes
+    ) -> Song | Album | Artist | Playlist | None:
         """`Song`: Returns a song by it's id.
 
         Arguments
@@ -93,15 +95,33 @@ class CatalogAPI:
         song_id: `str`
             Song ID to search for.
         """
+        url = f"/v1/catalog/{self.client.storefront}"
+        match object_type:
+            case CatalogTypes.Songs:
+                url += "/songs"
+            case CatalogTypes.Albums:
+                url += "/albums"
+            case CatalogTypes.Artists:
+                url += "/artists"
+            case CatalogTypes.Playlists:
+                url += "/playlists"
         with self.client.session.get(
-            self.client.session.base_url
-            + f"/v1/catalog/{self.client.storefront}/songs/{song_id}"
+            self.client.session.base_url + url + f"/{object_id}"
         ) as resp:
             js = resp.json()
             _log.debug("get by id response: %s", js)
             if js["data"] == []:
                 return None
-            return Song(self.client, **js["data"][0])
+            match object_type:
+                case CatalogTypes.Songs:
+                    return Song(self.client, **js["data"][0])
+                case CatalogTypes.Albums:
+                    return Album(self.client, **js["data"][0])
+                case CatalogTypes.Artists:
+                    return Artist(self.client, **js["data"][0])
+                case CatalogTypes.Playlists:
+                    return Playlist(self.client, **js["data"][0])
+            return None
 
     def get_by_isrc(self, isrc: str) -> Song | None:
         """`Song`: Returns a song by it's ISRC.
