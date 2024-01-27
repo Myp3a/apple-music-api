@@ -80,8 +80,8 @@ class PlaylistAPI:
             self.client.session.base_url
             + f"/v1/me/library/playlists/{playlist.id}"
         ) as resp:
-            js = resp.json()
-            _log.debug("delete playlist response: %s", js)
+            if resp.text != "":
+                _log.debug("delete playlist response: %s", resp.json())
             return resp.status_code == 204
 
     def add_to_playlist(
@@ -111,8 +111,8 @@ class PlaylistAPI:
             + f"/v1/me/library/playlists/{playlist.id}/tracks",
             json={"data": tracks_to_add},
         ) as resp:
-            js = resp.json()
-            _log.debug("add to playlist response: %s", js)
+            if resp.text != "":
+                _log.debug("add to playlist response: %s", resp.json())
             return resp.status_code == 201
 
     def delete_from_playlist(
