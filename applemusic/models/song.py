@@ -8,6 +8,7 @@ from applemusic.models.meta import (
     Artwork,
     AudioVariants,
     ContentRating,
+    LibraryTypes,
     Notes,
     PlayParameters,
 )
@@ -159,6 +160,44 @@ class Song(AppleMusicObject):
         Needs Music User Token.
         """
         return self._client.library.add(self)
+
+    def get_library_song(self, fast=True) -> LibrarySong | None:
+        """`LibrarySong`|`None`: Returns matching song in user library.
+
+        Needs Music User Token.
+
+        Arguments
+        ---------
+        fast: `bool`
+            Use faster query mechanism, but sometimes unreliable.
+        """
+        if fast:
+            songs = self._client.library.search(
+                self.attributes.artist_name, LibraryTypes.Songs, limit=25
+            )
+        else:
+            songs = self._client.library.songs()
+        for song in songs:
+            if (
+                song.attributes.play_params.catalog_id
+                == self.attributes.play_params.id
+            ):
+                return song
+        return None
+
+    def in_library(self, fast=True) -> bool:
+        """`bool`: Returns if song is in user's music library.
+
+        Needs Music User Token.
+
+        Arguments
+        ---------
+        fast: `bool`
+            Use faster query mechanism, but sometimes unreliable.
+        """
+        if self.get_library_song(fast) is not None:
+            return True
+        return False
 
     def lyrics(self) -> Lyrics | None:
         """`Lyrics`|`None`: Returns lyrics for song, `None` if not exists."""
