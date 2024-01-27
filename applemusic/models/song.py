@@ -4,9 +4,11 @@ from typing import TYPE_CHECKING
 
 from pydantic import BaseModel, Field
 
+from applemusic.models.album import Album
 from applemusic.models.meta import (
     Artwork,
     AudioVariants,
+    CatalogTypes,
     ContentRating,
     LibraryTypes,
     Notes,
@@ -161,6 +163,17 @@ class Song(AppleMusicObject):
         """
         return self._client.library.add(self)
 
+    def album(self) -> Album:
+        assert isinstance(
+            (
+                album := self._client.catalog.get_by_id(
+                    self.relationships.albums.data[0].id, CatalogTypes.Albums
+                )
+            ),
+            Album,
+        )
+        return album
+
     def audio(self) -> bytes:
         """`bytes`: Returns raw decrypted music data.
 
@@ -304,7 +317,7 @@ class LibrarySong(AppleMusicObject):
         """`Song`|`None`: Returns corresponding catalog song, `None` if not exists."""
         if (catalog_id := self.attributes.play_params.catalog_id) == "":
             return None
-        return self._client.catalog.get_by_id(catalog_id)
+        return self._client.catalog.get_by_id(catalog_id, CatalogTypes.Songs)
 
     def lyrics(self) -> Lyrics | None:
         """`Lyrics`|`None`: Returns lyrics for song, `None` if not exists."""
