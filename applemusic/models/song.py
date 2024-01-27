@@ -463,9 +463,7 @@ class LibrarySong(AppleMusicObject):
 
     def get_catalog_song(self) -> Song | None:
         """`Song`|`None`: Returns corresponding catalog song, `None` if not exists."""
-        if (catalog_id := self.play_params.catalog_id) == "":
-            return None
-        return self._client.catalog.get_by_id(catalog_id, CatalogTypes.Songs)
+        return self._client.catalog.get_corresponding_catalog_song(self)
 
     def lyrics(self) -> Lyrics | None:
         """`Lyrics`|`None`: Returns lyrics for song, `None` if not exists."""

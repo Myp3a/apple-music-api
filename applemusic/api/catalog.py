@@ -8,7 +8,7 @@ from applemusic.models.artist import Artist
 from applemusic.models.lyrics import Lyrics
 from applemusic.models.meta import CatalogTypes
 from applemusic.models.playlist import Playlist
-from applemusic.models.song import Song
+from applemusic.models.song import LibrarySong, Song
 
 if TYPE_CHECKING:
     from applemusic.client import ApiClient
@@ -147,3 +147,15 @@ class CatalogAPI:
             if js["data"] == []:
                 return None
             return Song(self.client, **js["data"][0])
+
+    def get_corresponding_catalog_song(self, song: LibrarySong) -> Song | None:
+        """`LibrarySong`|`None`: Returns matching song in catalog.
+
+        Arguments
+        ---------
+        song: `LibrarySong`
+            Song to get related for.
+        """
+        if (catalog_id := song.play_params.catalog_id) == "":
+            return None
+        return self.get_by_id(catalog_id, CatalogTypes.Songs)

@@ -221,6 +221,8 @@ class LibraryAPI:
 
         Arguments
         ---------
+        song: `Song`
+            Song to query library for.
         fast: `bool`
             Use faster query mechanism, but sometimes unreliable.
         """
