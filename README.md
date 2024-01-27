@@ -5,7 +5,6 @@ A library to interact with Apple Music API, both official and reverse-engineered
 [Installation](#installation) •
 [Requirements](#Requirements) •
 [Usage](#Usage) •
-[Quirks](#Quirks) •
 [TODO](#TODO)
 
 # Features
@@ -82,12 +81,8 @@ with open("song.m4a","wb") as outfile:
     outfile.write(cli.playback.get_decrypted_audio(catalog_song))
 ```
 
-# Quirks
- - Search doesn't work well. If you didn't find anything, try searching with other words.
-
 # TODO
  - Make easier bindings for actions
- - Research troubles with search
  - Cover more API methods
  - Make docs
 

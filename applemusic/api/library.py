@@ -74,7 +74,6 @@ class LibraryAPI:
             Limit for returned results. Can't be more than 25 internally.
         """
         types = [return_type.value]
-        query = query.replace(" ", "+")
         results = []
         url = "/v1/me/library/search"
         while True:

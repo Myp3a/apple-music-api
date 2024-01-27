@@ -47,7 +47,6 @@ class CatalogAPI:
             Limit for returned results. Can't be more than 25 internally.
         """
         types = [return_type.value]
-        query = query.replace(" ", "+")
         results = []
         url = f"/v1/catalog/{self.client.storefront}/search"
         while True:
