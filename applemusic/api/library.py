@@ -124,7 +124,7 @@ class LibraryAPI:
             params={f"ids[{item_type}]": object_to_add.id},
         ) as resp:
             if resp.text != "":
-                _log.debug("library remove response: %s", resp.json())
+                _log.debug("library add response: %s", resp.json())
             return resp.status_code == 202
 
     def remove(self, object_to_delete: AppleMusicObject) -> bool:

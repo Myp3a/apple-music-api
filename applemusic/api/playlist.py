@@ -115,6 +115,30 @@ class PlaylistAPI:
             _log.debug("add to playlist response: %s", js)
             return resp.status_code == 201
 
+    def delete_from_playlist(
+        self, playlist: LibraryPlaylist, song: LibrarySong
+    ) -> bool:
+        """`bool`: Adds songs to playlist.
+
+        Needs a Music User Token.
+
+        Arguments
+        ---------
+        playlist: `LibraryPlaylist`
+            Playlist to add songs to.
+        song: `LibrarySong`
+            Song to remove from playlist.
+        """
+        with self.client.session.delete(
+            self.client.session.base_url
+            + f"/v1/me/library/playlists/{playlist.id}/tracks",
+            params={"ids[library-songs]": song.id, "mode": "all"},
+        ) as resp:
+            js = resp.json()
+            if resp.text != "":
+                _log.debug("remove from playlist response: %s", js)
+            return resp.status_code == 204
+
     def list_tracks(
         self, playlist: LibraryPlaylist | Playlist
     ) -> list[Song | LibrarySong]:
