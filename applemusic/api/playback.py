@@ -9,6 +9,7 @@ import m3u8
 from pywidevine import PSSH, Cdm, Device
 from pywidevine.license_protocol_pb2 import WidevinePsshData
 
+import config
 from applemusic.decrypt import decrypt
 from applemusic.models.song import Song
 
@@ -32,7 +33,7 @@ class PlaybackAPI:
         )
         self.license_url = "https://play.itunes.apple.com/WebObjects/MZPlay.woa/wa/acquireWebPlaybackLicense"
         self.default_flavor = "28:ctrp256"
-        self.cdm = Cdm.from_device(Device.load("./device.wvd"))
+        self.cdm = Cdm.from_device(Device.load(config.WIDEVINE_DEVICE))
         self.cdm_session = self.cdm.open()
 
     def get_webplayback(self, song: Song) -> dict:
