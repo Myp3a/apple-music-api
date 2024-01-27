@@ -4,6 +4,8 @@ from typing import TYPE_CHECKING
 
 from pydantic import BaseModel
 
+from applemusic.models.relationships import Relationships
+
 if TYPE_CHECKING:
     from applemusic.client import ApiClient
 
@@ -31,7 +33,7 @@ class AppleMusicObject(BaseModel):
     type: str
     href: str = ""
     attributes: str
-    relationships: dict = {}
+    relationships: Relationships = Relationships(**{})
     views: dict = {}
     _client: ApiClient
 
