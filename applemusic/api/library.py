@@ -165,7 +165,8 @@ class LibraryAPI:
             self.client.session.base_url
             + f"/v1/me/library/{item_type}/{object_to_delete.id}"
         ) as resp:
-            _log.debug("library remove response: %s", resp.json())
+            if resp.text != "":
+                _log.debug("library remove response: %s", resp.json())
             if resp.status_code == 204:
                 return True
             else:
