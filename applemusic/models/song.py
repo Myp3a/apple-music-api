@@ -1,3 +1,7 @@
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
 from pydantic import BaseModel, Field
 
 from applemusic.models.meta import (
@@ -8,6 +12,9 @@ from applemusic.models.meta import (
     PlayParameters,
 )
 from applemusic.models.object import AppleMusicObject
+
+if TYPE_CHECKING:
+    from applemusic.models.lyrics import Lyrics
 
 
 class SongPreview(BaseModel):
@@ -146,6 +153,17 @@ class Song(AppleMusicObject):
     def __repr__(self) -> str:
         return f"<{self.__str__()} ({self.id})>"
 
+    def add_to_library(self) -> bool:
+        """`bool`: Adds song to user library.
+
+        Needs Music User Token.
+        """
+        return self._client.library.add(self)
+
+    def lyrics(self) -> Lyrics | None:
+        """`Lyrics`|`None`: Returns lyrics for song, `None` if not exists."""
+        return self._client.catalog.lyrics(self)
+
 
 class LibrarySongAttributes(BaseModel):
     """Class that represents data about library song.
@@ -222,3 +240,22 @@ class LibrarySong(AppleMusicObject):
 
     def __repr__(self) -> str:
         return f"<{self.__str__()} ({self.id})>"
+
+    def get_catalog_song(self) -> Song | None:
+        """`Song`|`None`: Returns corresponding catalog song, `None` if not exists."""
+        if (catalog_id := self.attributes.play_params.catalog_id) == "":
+            return None
+        return self._client.catalog.get_by_id(catalog_id)
+
+    def lyrics(self) -> Lyrics | None:
+        """`Lyrics`|`None`: Returns lyrics for song, `None` if not exists."""
+        if (catalog_song := self.get_catalog_song()) is None:
+            return None
+        return self._client.catalog.lyrics(catalog_song)
+
+    def remove_from_library(self) -> bool:
+        """`bool`: Removes song from user library.
+
+        Needs Music User Token.
+        """
+        return self._client.library.remove(self)
