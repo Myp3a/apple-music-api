@@ -1,9 +1,15 @@
+from __future__ import annotations
+
 from enum import Enum
+from typing import TYPE_CHECKING, List
 
 from pydantic import BaseModel, Field
 
 from applemusic.models.meta import Artwork, Notes, PlayParameters
 from applemusic.models.object import AppleMusicObject
+
+if TYPE_CHECKING:
+    from applemusic.models.song import LibrarySong, Song
 
 
 class PlaylistTrackTypes(Enum):
@@ -167,3 +173,38 @@ class LibraryPlaylist(AppleMusicObject):
 
     def __repr__(self) -> str:
         return f"<{self.__str__()} ({self.id})>"
+
+    def add_songs(self, songs: List[LibrarySong | Song]) -> bool:
+        """`bool`: Adds songs to playlist.
+
+        Needs Music User Token.
+
+        Arguments
+        ---------
+        songs: List[`LibrarySong`|`Song`]
+            A list of songs to be added.
+        """
+        return self._client.playlist.add_to_playlist(self, songs)
+
+    def list_songs(self) -> List[LibrarySong]:
+        """List[`LibrarySong`]: Returns a list of playlist songs."""
+        return self._client.playlist.list_tracks(self)
+
+    def remove_songs(self, song: LibrarySong) -> bool:
+        """`bool`: Removes song from playlist.
+
+        Needs Music User Token.
+
+        Arguments
+        ---------
+        song: `LibrarySong`
+            A song to be removed.
+        """
+        return self._client.playlist.delete_from_playlist(self, song)
+
+    def delete(self) -> bool:
+        """`bool`: Deletes the playlist.
+
+        Needs Music User Token.
+        """
+        return self._client.playlist.delete_playlist(self)
