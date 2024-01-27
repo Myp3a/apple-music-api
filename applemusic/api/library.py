@@ -211,3 +211,24 @@ class LibraryAPI:
             if resp.text != "":
                 _log.debug("favorites remove response: %s", resp.json())
             return resp.status_code == 204
+
+    def get_corresponding_library_song(
+        self, song: Song, fast=True
+    ) -> LibrarySong | None:
+        """`LibrarySong`|`None`: Returns matching song in user library.
+
+        Needs Music User Token.
+
+        Arguments
+        ---------
+        fast: `bool`
+            Use faster query mechanism, but sometimes unreliable.
+        """
+        if fast:
+            songs = self.search(song.artist_name, LibraryTypes.Songs, limit=25)
+        else:
+            songs = self.songs()
+        for library_song in songs:
+            if library_song.play_params.catalog_id == song.play_params.id:
+                return song
+        return None

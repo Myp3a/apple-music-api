@@ -11,7 +11,6 @@ from applemusic.models.meta import (
     AudioVariants,
     CatalogTypes,
     ContentRating,
-    LibraryTypes,
     Notes,
     PlayParameters,
 )
@@ -313,16 +312,7 @@ class Song(AppleMusicObject):
         fast: `bool`
             Use faster query mechanism, but sometimes unreliable.
         """
-        if fast:
-            songs = self._client.library.search(
-                self.artist_name, LibraryTypes.Songs, limit=25
-            )
-        else:
-            songs = self._client.library.songs()
-        for song in songs:
-            if song.play_params.catalog_id == self.play_params.id:
-                return song
-        return None
+        return self._client.library.get_corresponding_library_song(self, fast)
 
     def in_library(self, fast=True) -> bool:
         """`bool`: Returns if song is in user's music library.
