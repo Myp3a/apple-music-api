@@ -60,22 +60,22 @@ class CatalogAPI:
                     return []
                 if songs := js["results"].get(CatalogTypes.Songs.value, False):
                     for res in songs["data"]:
-                        results.append(Song(**res))
+                        results.append(Song(self.client, **res))
                 if albums := js["results"].get(
                     CatalogTypes.Albums.value, False
                 ):
                     for res in albums["data"]:
-                        results.append(Album(**res))
+                        results.append(Album(self.client, **res))
                 if artists := js["results"].get(
                     CatalogTypes.Artists.value, False
                 ):
                     for res in artists["data"]:
-                        results.append(Artist(**res))
+                        results.append(Artist(self.client, **res))
                 if playlists := js["results"].get(
                     CatalogTypes.Playlists.value, False
                 ):
                     for res in playlists["data"]:
-                        results.append(Playlist(**res))
+                        results.append(Playlist(self.client, **res))
                 if len(results) >= limit:
                     return results[:limit]
                 url = js["results"][return_type.value].get("next", None)
@@ -98,7 +98,7 @@ class CatalogAPI:
             _log.debug("lyrics response: %s", js)
             if js["data"] == []:
                 return None
-            return Lyrics(**js["data"][0])
+            return Lyrics(self.client, **js["data"][0])
 
     def get_by_id(self, song_id: str) -> Song | None:
         """`Song`: Returns a song by it's id.
@@ -116,7 +116,7 @@ class CatalogAPI:
             _log.debug("get by id response: %s", js)
             if js["data"] == []:
                 return None
-            return Song(**js["data"][0])
+            return Song(self.client, **js["data"][0])
 
     def get_by_isrc(self, isrc: str) -> Song | None:
         """`Song`: Returns a song by it's ISRC.
@@ -135,4 +135,4 @@ class CatalogAPI:
             _log.debug("get by isrc response: %s", js)
             if js["data"] == []:
                 return None
-            return Song(**js["data"][0])
+            return Song(self.client, **js["data"][0])

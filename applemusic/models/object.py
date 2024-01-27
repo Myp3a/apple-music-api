@@ -1,4 +1,11 @@
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
 from pydantic import BaseModel
+
+if TYPE_CHECKING:
+    from applemusic.client import ApiClient
 
 
 class AppleMusicObject(BaseModel):
@@ -26,3 +33,8 @@ class AppleMusicObject(BaseModel):
     attributes: str
     relationships: dict = {}
     views: dict = {}
+    _client: ApiClient
+
+    def __init__(self, client, **data):
+        super().__init__(**data)
+        self._client = client

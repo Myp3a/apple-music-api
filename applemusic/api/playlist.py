@@ -30,7 +30,7 @@ class PlaylistAPI:
                 js = resp.json()
                 _log.debug("playlist list response: %s", js)
                 for p in js["data"]:
-                    playlist = LibraryPlaylist(**p)
+                    playlist = LibraryPlaylist(self.client, **p)
                     playlists.append(playlist)
                 if url := js.get("next", False):
                     pass
@@ -63,7 +63,7 @@ class PlaylistAPI:
             js = resp.json()
             _log.debug("create playlist response: %s", js)
             if resp.status_code == 201:
-                return LibraryPlaylist(**resp.json()["data"][0])
+                return LibraryPlaylist(self.client, **resp.json()["data"][0])
             else:
                 return False
 
@@ -138,9 +138,9 @@ class PlaylistAPI:
                 for t in tracks:
                     match t["type"]:
                         case "library-songs":
-                            track = LibrarySong(**t)
+                            track = LibrarySong(self.client, **t)
                         case "songs":
-                            track = Song(**t)
+                            track = Song(self.client, **t)
                     res.append(track)
                 if url := js.get("next", False):
                     pass

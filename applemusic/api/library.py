@@ -49,7 +49,7 @@ class LibraryAPI:
                 js = resp.json()
                 _log.debug("songs list response: %s", js)
                 for s in js["data"]:
-                    song = LibrarySong(**s)
+                    song = LibrarySong(self.client, **s)
                     songs.append(song)
                 if url := js.get("next", False):
                     pass
@@ -87,22 +87,22 @@ class LibraryAPI:
                     return []
                 if songs := js["results"].get(LibraryTypes.Songs.value, False):
                     for res in songs["data"]:
-                        results.append(LibrarySong(**res))
+                        results.append(LibrarySong(self.client, **res))
                 if albums := js["results"].get(
                     LibraryTypes.Albums.value, False
                 ):
                     for res in albums["data"]:
-                        results.append(LibraryAlbum(**res))
+                        results.append(LibraryAlbum(self.client, **res))
                 if artists := js["results"].get(
                     LibraryTypes.Artists.value, False
                 ):
                     for res in artists["data"]:
-                        results.append(LibraryArtist(**res))
+                        results.append(LibraryArtist(self.client, **res))
                 if playlists := js["results"].get(
                     LibraryTypes.Playlists.value, False
                 ):
                     for res in playlists["data"]:
-                        results.append(LibraryPlaylist(**res))
+                        results.append(LibraryPlaylist(self.client, **res))
                 if len(results) >= limit:
                     return results[:limit]
                 else:
@@ -134,11 +134,9 @@ class LibraryAPI:
             self.client.session.base_url + "/v1/me/library",
             params={f"ids[{item_type}]": object_to_add.id},
         ) as resp:
-            _log.debug("library add response: %s", resp.json())
-            if resp.status_code == 202:
-                return True
-            else:
-                return False
+            if resp.text != "":
+                _log.debug("library remove response: %s", resp.json())
+            return resp.status_code == 202
 
     def remove(self, object_to_delete: AppleMusicObject) -> bool:
         """`bool`: Removes an object from user's music library.
@@ -167,10 +165,7 @@ class LibraryAPI:
         ) as resp:
             if resp.text != "":
                 _log.debug("library remove response: %s", resp.json())
-            if resp.status_code == 204:
-                return True
-            else:
-                return False
+            return resp.status_code == 204
 
     def favorite(self, object_to_favorite: AppleMusicObject) -> bool:
         """`bool`: Favorites an object in user music library.
@@ -198,10 +193,7 @@ class LibraryAPI:
         ) as resp:
             if resp.text != "":
                 _log.debug("favorites add response: %s", resp.json())
-            if resp.status_code == 202:
-                return True
-            else:
-                return False
+            return resp.status_code == 202
 
     def unfavorite(self, object_to_delete: AppleMusicObject) -> bool:
         """`bool`: Removes an object from user's favorites.
@@ -229,7 +221,4 @@ class LibraryAPI:
         ) as resp:
             if resp.text != "":
                 _log.debug("favorites remove response: %s", resp.json())
-            if resp.status_code == 204:
-                return True
-            else:
-                return False
+            return resp.status_code == 204
