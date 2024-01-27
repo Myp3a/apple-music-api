@@ -52,8 +52,8 @@ DEV_TOKEN = "dev_token_goes_here"
 cli = applemusic.ApiClient(DEV_TOKEN, storefront="us")
 
 songs = cli.catalog.search("Ellie Goulding", CatalogTypes.Songs)
-print(songs[0].attributes.name)           # Lights
-print(songs[0].attributes.artist_name)    # Ellie Goulding
+print(songs[0].name)           # Lights
+print(songs[0].artist_name)    # Ellie Goulding
 ```
 Adding library song to playlist
 ```Python
