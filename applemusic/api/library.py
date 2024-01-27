@@ -36,7 +36,7 @@ class LibraryAPI:
     def songs(self) -> list[LibrarySong]:
         """List[`Song`]: Returns a list of library songs.
 
-        Could be slow. Internally limited by 25 songs per request.
+        Could be slow. Internally limited by 100 songs per request.
 
         Needs a Music User Token.
         """
@@ -44,7 +44,7 @@ class LibraryAPI:
         url = "/v1/me/library/songs"
         while True:
             with self.client.session.get(
-                self.client.session.base_url + url
+                self.client.session.base_url + url, params={"limit": 100}
             ) as resp:
                 js = resp.json()
                 _log.debug("songs list response: %s", js)
