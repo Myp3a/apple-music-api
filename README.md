@@ -26,13 +26,12 @@ You'll need three things to use all features of the library:
  - Music User Token
  - Widevine Device File  
 
-Rename `config.example.py` to `config.py`, fill it with values and you're good to go!
 ### Apple Developer Token
 Allows interaction with all public API's. Required.  
-Official way TBD
+You can get it with the instruction [here](https://developer.apple.com/documentation/applemusicapi/generating_developer_tokens).
 ### Music User Token
 Allows interaction with your library. Required for library functions.  
-Official way TBD
+You can get it by following the instruction [here](https://developer.apple.com/documentation/applemusicapi/user_authentication_for_musickit)
 ### Alternative way
 You can get both tokens by intercepting requests to `https://music.apple.com/`.
 ### Widevine Device File
@@ -43,12 +42,14 @@ pywidevine create-device -t ANDROID -l 3 -k private_key.pem -c client_id.bin -o 
 ```
 
 # Usage
-Example of searching catalog song information:
+Example of searching catalog song information without user token:
 ```Python
 import applemusic
 from applemusic.api.catalog import CatalogTypes
 
-cli = applemusic.ApiClient(config.DEV_TOKEN, config.USER_TOKEN)
+DEV_TOKEN = "dev_token_goes_here"
+
+cli = applemusic.ApiClient(DEV_TOKEN, storefront="us")
 
 songs = cli.catalog.search("Ellie Goulding", CatalogTypes.Songs)
 print(songs[0].attributes.name)           # Lights
@@ -59,7 +60,10 @@ Adding library song to playlist
 import applemusic
 from applemusic.api.library import LibraryTypes
 
-cli = applemusic.ApiClient(config.DEV_TOKEN, config.USER_TOKEN)
+DEV_TOKEN = "dev_token_goes_here"
+USER_TOKEN = "and_user_one_here"
+
+cli = applemusic.ApiClient(DEV_TOKEN, USER_TOKEN)
 
 songs = cli.library.search("Against The Current", LibraryTypes.Songs)
 song = songs[0]
@@ -71,7 +75,11 @@ Downloading a song
 import applemusic
 from applemusic.api.library import LibraryTypes
 
-cli = applemusic.ApiClient(config.DEV_TOKEN, config.USER_TOKEN)
+DEV_TOKEN = "dev_token_goes_here"
+USER_TOKEN = "and_user_one_here"
+WIDEVINE_DEVICE = "device.wvd"
+
+cli = applemusic.ApiClient(DEV_TOKEN, USER_TOKEN, widevine_device_file=WIDEVINE_DEVICE)
 
 songs = cli.library.search("TMNV", LibraryTypes.Songs)
 song = songs[0]
