@@ -33,12 +33,37 @@ class AudioVariants(Enum):
     Spatial = "spatial"
 
 
+class CatalogTypes(Enum):
+    """Available catalog search types."""
+
+    Activities = "activities"
+    Albums = "albums"
+    AppleCurators = "apple-curators"
+    Artists = "artists"
+    Curators = "curators"
+    MusicVideos = "music-videos"
+    Playlists = "playlists"
+    RecordLabels = "record-labels"
+    Songs = "songs"
+    Stations = "stations"
+
+
 class ContentRating(Enum):
     """Content rating of element."""
 
     No = "no"
     Clean = "clean"
     Explicit = "explicit"
+
+
+class LibraryTypes(Enum):
+    """Available library search types."""
+
+    Albums = "library-albums"
+    Artists = "library-artists"
+    MusicVideos = "library-music-videos"
+    Playlists = "library-playlists"
+    Songs = "library-songs"
 
 
 class Notes(BaseModel):

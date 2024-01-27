@@ -1,12 +1,11 @@
 from __future__ import annotations
 
 import logging
-from enum import Enum
 from typing import TYPE_CHECKING
 
-from applemusic.api.catalog import CatalogTypes
 from applemusic.models.album import Album, LibraryAlbum
 from applemusic.models.artist import Artist, LibraryArtist
+from applemusic.models.meta import CatalogTypes, LibraryTypes
 from applemusic.models.object import AppleMusicObject
 from applemusic.models.playlist import LibraryPlaylist, Playlist
 from applemusic.models.song import LibrarySong, Song
@@ -15,16 +14,6 @@ if TYPE_CHECKING:
     from applemusic.client import ApiClient
 
 _log = logging.getLogger(__name__)
-
-
-class LibraryTypes(Enum):
-    """Available library search types."""
-
-    Albums = "library-albums"
-    Artists = "library-artists"
-    MusicVideos = "library-music-videos"
-    Playlists = "library-playlists"
-    Songs = "library-songs"
 
 
 class LibraryAPI:

@@ -1,7 +1,6 @@
 import logging
 
-from applemusic.api.catalog import CatalogTypes
-from applemusic.api.library import LibraryTypes
+from applemusic.models.meta import CatalogTypes, LibraryTypes
 from applemusic.models.playlist import LibraryPlaylist, Playlist
 from applemusic.models.song import LibrarySong, Song
 

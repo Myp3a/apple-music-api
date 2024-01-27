@@ -1,28 +1,13 @@
 import logging
-from enum import Enum
 
 from applemusic.models.album import Album
 from applemusic.models.artist import Artist
 from applemusic.models.lyrics import Lyrics
+from applemusic.models.meta import CatalogTypes
 from applemusic.models.playlist import Playlist
 from applemusic.models.song import Song
 
 _log = logging.getLogger(__name__)
-
-
-class CatalogTypes(Enum):
-    """Available catalog search types."""
-
-    Activities = "activities"
-    Albums = "albums"
-    AppleCurators = "apple-curators"
-    Artists = "artists"
-    Curators = "curators"
-    MusicVideos = "music-videos"
-    Playlists = "playlists"
-    RecordLabels = "record-labels"
-    Songs = "songs"
-    Stations = "stations"
 
 
 class CatalogAPI:
