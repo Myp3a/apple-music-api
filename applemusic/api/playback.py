@@ -22,7 +22,6 @@ _log = logging.getLogger(__name__)
 class PlaybackAPI:
     """Playlist related API endpoints.
     WARNING: More hacky than other parts of the API! Can break at any time.
-    TODO: find a way to get decrypted audio without external libraries, like mp4decrypt.
     ty https://github.com/glomatico/gamdl !
     """
 
@@ -55,7 +54,7 @@ class PlaybackAPI:
             assert error is False, "Error getting webplayback info"
             return js["songList"][0]
 
-    def get_available_streams(self, song: Song):
+    def get_available_streams(self, song: Song) -> dict[str, str]:
         """`dict`: Returns a dictionary of song_format: m3u8_url.
 
         Needs a Music User Token.
@@ -67,7 +66,7 @@ class PlaybackAPI:
         _log.debug("available streams: %s", result)
         return result
 
-    def get_license(self, challenge, track_url, track_id):
+    def get_license(self, challenge: str, track_url: str, track_id: str) -> str:
         """`str`: Returns a base64 encoded license key for track.
 
         Needs a Music User Token.
@@ -88,7 +87,7 @@ class PlaybackAPI:
             assert js["status"] == 0, "Error getting license"
             return js["license"]
 
-    def get_decryption_key(self, track_url, track_id):
+    def get_decryption_key(self, track_url: str, track_id: str) -> bytes:
         """`bytes`: Returns a key for track.
 
         Needs a Widevine device file.
@@ -128,7 +127,7 @@ class PlaybackAPI:
         with self.client.session.get(path + part_url.uri) as resp:
             return resp.content, key
 
-    def get_decrypted_audio(self, song: Song):
+    def get_decrypted_audio(self, song: Song) -> bytes:
         """`bytes`: Returns raw decrypted music data.
 
         Needs a Music User Token.
