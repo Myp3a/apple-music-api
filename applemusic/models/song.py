@@ -210,9 +210,9 @@ class LibrarySongAttributes(BaseModel):
     Attributes
     ----------
     album_name: `str`
-        Album name.
+        Album name. Can be empty.
     artist_name: `str`
-        Artist name.
+        Artist name. Can be empty.
     artwork: `Artwork`
         Data about album artwork. Can be empty.
     content_rating: `ContentRating`
@@ -237,7 +237,7 @@ class LibrarySongAttributes(BaseModel):
     """
 
     album_name: str = Field(alias="albumName", default="")
-    artist_name: str = Field(alias="artistName")
+    artist_name: str = Field(alias="artistName", default="")
     artwork: Artwork = Artwork(**{})
     content_rating: ContentRating = Field(
         alias="contentRating", default=ContentRating.No
