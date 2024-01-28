@@ -23,7 +23,7 @@ class CatalogAPI:
         self.client = client
 
     def search(
-        self, query: str, return_type: CatalogTypes, limit: int = 5
+        self, query: str, return_type: CatalogTypes, limit: int = 5, lang="en"
     ) -> list[Song | Album | Artist | Playlist]:
         """List[`Song`|`Album`|`Artist`|`Playlist`]: Returns search results.
         Returned type is determined by `return_type` parameter.
@@ -43,7 +43,7 @@ class CatalogAPI:
         while True:
             with self.client.session.get(
                 self.client.session.base_url + url,
-                params={"term": query, "types": types, "limit": 25},
+                params={"term": query, "types": types, "limit": 25, "l": lang},
             ) as resp:
                 js = resp.json()
                 _log.debug("search response: %s", js)
@@ -92,7 +92,7 @@ class CatalogAPI:
             return Lyrics(self.client, **js["data"][0])
 
     def get_by_id(
-        self, object_id: str, object_type: CatalogTypes
+        self, object_id: str, object_type: CatalogTypes, lang="en"
     ) -> Song | Album | Artist | Playlist | None:
         """`Song`: Returns a song by it's id.
 
@@ -112,7 +112,8 @@ class CatalogAPI:
             case CatalogTypes.Playlists:
                 url += "/playlists"
         with self.client.session.get(
-            self.client.session.base_url + url + f"/{object_id}"
+            self.client.session.base_url + url + f"/{object_id}",
+            params={"l": lang},
         ) as resp:
             js = resp.json()
             _log.debug("get by id response: %s", js)

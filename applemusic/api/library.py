@@ -31,7 +31,7 @@ class LibraryAPI:
         self.client = client
 
     def songs(
-        self, sort: SortOrder = SortOrder.DateAddedDescending
+        self, sort: SortOrder = SortOrder.DateAddedDescending, lang="en"
     ) -> list[LibrarySong]:
         """List[`Song`]: Returns a list of library songs.
 
@@ -44,7 +44,7 @@ class LibraryAPI:
         while True:
             with self.client.session.get(
                 self.client.session.base_url + url,
-                params={"limit": 100, "sort": sort.value},
+                params={"limit": 100, "sort": sort.value, "l": lang},
             ) as resp:
                 js = resp.json()
                 _log.debug("songs list response: %s", js)
@@ -57,7 +57,7 @@ class LibraryAPI:
                     return songs
 
     def search(
-        self, query: str, return_type: LibraryTypes, limit: int = 5
+        self, query: str, return_type: LibraryTypes, limit: int = 5, lang="en"
     ) -> list[LibrarySong | LibraryAlbum | LibraryArtist | LibraryPlaylist]:
         """List[`LibrarySong`|`LibraryAlbum`|`LibraryArtist`|`LibraryPlaylist`]: Returns search results.
         Returned type is determined by `return_type` parameter.
@@ -79,7 +79,7 @@ class LibraryAPI:
         while True:
             with self.client.session.get(
                 self.client.session.base_url + url,
-                params={"term": query, "types": types, "limit": 25},
+                params={"term": query, "types": types, "limit": 25, "l": lang},
             ) as resp:
                 js = resp.json()
                 _log.debug("search response: %s", js)
