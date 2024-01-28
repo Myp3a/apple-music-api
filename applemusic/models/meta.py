@@ -31,6 +31,7 @@ class AudioVariants(Enum):
     Lossless = "lossless"
     LossyStereo = "lossy-stereo"
     Spatial = "spatial"
+    Surround = "surround"
 
 
 class CatalogTypes(Enum):
