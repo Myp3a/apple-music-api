@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import logging
+from enum import Enum
 from typing import TYPE_CHECKING
 
 from applemusic.models.album import Album, LibraryAlbum
@@ -16,13 +17,22 @@ if TYPE_CHECKING:
 _log = logging.getLogger(__name__)
 
 
+class SortOrder(Enum):
+    DateAddedAscending = "dateAdded"  # From old to new
+    DateAddedDescending = "-dateAdded"  # From new to old
+    NameAscending = "name"  # A-Z
+    NameDescending = "-name"  # Z-A
+
+
 class LibraryAPI:
     """Library related API endpoints."""
 
     def __init__(self, client: ApiClient) -> None:
         self.client = client
 
-    def songs(self) -> list[LibrarySong]:
+    def songs(
+        self, sort: SortOrder = SortOrder.DateAddedDescending
+    ) -> list[LibrarySong]:
         """List[`Song`]: Returns a list of library songs.
 
         Could be slow. Internally limited by 100 songs per request.
@@ -33,7 +43,8 @@ class LibraryAPI:
         url = "/v1/me/library/songs"
         while True:
             with self.client.session.get(
-                self.client.session.base_url + url, params={"limit": 100}
+                self.client.session.base_url + url,
+                params={"limit": 100, "sort": sort.value},
             ) as resp:
                 js = resp.json()
                 _log.debug("songs list response: %s", js)
