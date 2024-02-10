@@ -160,3 +160,19 @@ class CatalogAPI:
         if (catalog_id := song.play_params.catalog_id) == "":
             return None
         return self.get_by_id(catalog_id, CatalogTypes.Songs)
+
+    def get_artwork(self, song: Song) -> bytes:
+        """`bytes`: Returns artwork for song.
+
+        Arguments
+        ---------
+        song: `Song`
+            Song to get artwork for.
+        """
+        url = song.artwork.url
+        if url == "":
+            return b""
+        url = url.replace("{w}", str(song.artwork.width))
+        url = url.replace("{h}", str(song.artwork.height))
+        with self.client.session.get(url) as resp:
+            return resp.content

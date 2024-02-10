@@ -277,3 +277,17 @@ class LibraryAPI:
                 case LibraryTypes.Playlists:
                     return LibraryPlaylist(self.client, **js["data"][0])
             return None
+
+    def get_artwork(self, song: LibrarySong) -> bytes:
+        """`bytes`: Returns artwork for song.
+
+        Arguments
+        ---------
+        song: `LibrarySong`
+            Song to get artwork for.
+        """
+        url = song.artwork.url
+        if url == "":
+            return b""
+        with self.client.session.get(url) as resp:
+            return resp.content

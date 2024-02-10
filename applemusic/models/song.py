@@ -328,6 +328,9 @@ class Song(AppleMusicObject):
         """`Lyrics`|`None`: Returns lyrics for song, `None` if not exists."""
         return self._client.catalog.lyrics(self)
 
+    def get_artwork(self) -> bytes:
+        return self._client.catalog.get_artwork(self)
+
 
 class LibrarySongAttributes(BaseModel):
     """Class that represents data about library song.
@@ -473,3 +476,6 @@ class LibrarySong(AppleMusicObject):
         Needs Music User Token.
         """
         return self._client.library.remove(self)
+
+    def get_artwork(self) -> bytes:
+        return self._client.catalog.get_artwork(self)
