@@ -245,3 +245,35 @@ class LibraryAPI:
             if library_song.play_params.catalog_id == song.play_params.id:
                 return song
         return None
+
+    def get_by_id(
+        self, object_id: str, object_type: LibraryTypes, lang="en"
+    ) -> LibrarySong | LibraryAlbum | LibraryArtist | LibraryPlaylist | None:
+        url = f"/v1/me/library"
+        match object_type:
+            case LibraryTypes.Songs:
+                url += "/songs"
+            case LibraryTypes.Albums:
+                url += "/albums"
+            case LibraryTypes.Artists:
+                url += "/artists"
+            case LibraryTypes.Playlists:
+                url += "/playlists"
+        with self.client.session.get(
+            self.client.session.base_url + url + f"/{object_id}",
+            params={"l": lang},
+        ) as resp:
+            js = resp.json()
+            _log.debug("get by id response: %s", js)
+            if js["data"] == []:
+                return None
+            match object_type:
+                case LibraryTypes.Songs:
+                    return LibrarySong(self.client, **js["data"][0])
+                case LibraryTypes.Albums:
+                    return LibraryAlbum(self.client, **js["data"][0])
+                case LibraryTypes.Artists:
+                    return LibraryArtist(self.client, **js["data"][0])
+                case LibraryTypes.Playlists:
+                    return LibraryPlaylist(self.client, **js["data"][0])
+            return None
