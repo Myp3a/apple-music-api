@@ -274,6 +274,7 @@ class Song(AppleMusicObject):
     def album(self) -> Album:
         """`Album`: Returns album containing the song."""
         song = self._client.catalog.get_by_id(self.id, CatalogTypes.Songs)
+        assert song is not None
         album = self._client.catalog.get_by_id(
             song.relationships.albums.data[0].id, CatalogTypes.Albums
         )
@@ -283,6 +284,7 @@ class Song(AppleMusicObject):
     def artist(self) -> Album:
         """`Artist`: Returns artist performing the song."""
         song = self._client.catalog.get_by_id(self.id, CatalogTypes.Songs)
+        assert song is not None
         artist = self._client.catalog.get_by_id(
             song.relationships.artists.data[0].id, CatalogTypes.Artists
         )
