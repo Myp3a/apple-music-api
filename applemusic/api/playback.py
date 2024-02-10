@@ -6,6 +6,7 @@ import logging
 from typing import TYPE_CHECKING
 
 import m3u8
+from mutagen.mp4 import MP4, MP4Cover
 from pywidevine import PSSH, Cdm, Device
 from pywidevine.license_protocol_pb2 import WidevinePsshData
 
@@ -148,4 +149,22 @@ class PlaybackAPI:
         inp_buf.seek(0)
         decrypt(key, inp_buf, out_buf)
         out_buf.seek(0)
-        return out_buf.getbuffer()
+        with_tags = self.apply_tags(song, out_buf.getbuffer())
+        return with_tags
+
+    def apply_tags(self, meta_song: Song, data: bytes) -> bytes:
+        f = io.BytesIO()
+        f.write(data)
+        f.seek(0)
+        song = MP4(f)
+        song["\xa9nam"] = meta_song.name
+        song["\xa9alb"] = meta_song.album_name
+        song["\xa9ART"] = meta_song.artist_name
+        song["aART"] = meta_song.artist_name
+        song["\xa9day"] = meta_song.release_date
+        song["\xa9gen"] = meta_song.genre_names[0]
+        song["\xa9lyr"] = str(meta_song.lyrics())
+        song["trkn"] = [[meta_song.track_number, meta_song.album().track_count]]
+        song["covr"] = [MP4Cover(meta_song.get_artwork())]
+        song.save(f)
+        return f.getbuffer()
