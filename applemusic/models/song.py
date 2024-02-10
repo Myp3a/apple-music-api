@@ -273,26 +273,20 @@ class Song(AppleMusicObject):
 
     def album(self) -> Album:
         """`Album`: Returns album containing the song."""
-        assert isinstance(
-            (
-                album := self._client.catalog.get_by_id(
-                    self.relationships.albums.data[0].id, CatalogTypes.Albums
-                )
-            ),
-            Album,
+        song = self._client.catalog.get_by_id(self.id, CatalogTypes.Songs)
+        album = self._client.catalog.get_by_id(
+            song.relationships.albums.data[0].id, CatalogTypes.Albums
         )
+        assert isinstance(album, Album)
         return album
 
     def artist(self) -> Album:
         """`Artist`: Returns artist performing the song."""
-        assert isinstance(
-            (
-                artist := self._client.catalog.get_by_id(
-                    self.relationships.artists.data[0].id, CatalogTypes.Artists
-                )
-            ),
-            Artist,
+        song = self._client.catalog.get_by_id(self.id, CatalogTypes.Songs)
+        artist = self._client.catalog.get_by_id(
+            song.relationships.artists.data[0].id, CatalogTypes.Artists
         )
+        assert isinstance(artist, Artist)
         return artist
 
     def audio(self) -> bytes:
