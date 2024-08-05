@@ -28,7 +28,9 @@ You'll need three things to use all features of the library:
 
 ### Apple Developer Token
 Allows interaction with all public API's. Required.  
-You can get it with the instruction [here](https://developer.apple.com/documentation/applemusicapi/generating_developer_tokens).
+You can get it with the instruction [here](https://developer.apple.com/documentation/applemusicapi/generating_developer_tokens).  
+> Probably, automatic token retriever could be made - Music app fetches the token with the request to `https://sf-api-token-service.itunes.apple.com/apiToken`, passing a lot of unknown data.
+> If the data is app-specific, then there is a possibility that a developer token won't be needed anymore. If the data is tied to the user, then, well, everything will be as it is.
 ### Music User Token
 Allows interaction with your library. Required for library functions.  
 You can get it by following the instruction [here](https://developer.apple.com/documentation/applemusicapi/user_authentication_for_musickit)
