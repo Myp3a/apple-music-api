@@ -50,13 +50,22 @@ class Session:
         while not done:
             _log.debug("Doing network request with %s", func)
             with func(*args, **kwargs) as resp:
+                resp: requests.Response
                 _log.debug("Got response with code %s", resp.status_code)
                 if resp.status_code == 429:
                     _log.warning("Got ratelimited, sleeping a bit")
                     time.sleep(1)
                 elif resp.status_code >= 400:
-                    error = resp.json()["errors"][0]
-                    raise AppleMusicAPIException(error)
+                    if len(resp.text):
+                        error = resp.json()["errors"][0]
+                        raise AppleMusicAPIException(error)
+                    else:
+                        raise AppleMusicAPIException({
+                            "code": resp.status_code,
+                            "id": resp.status_code,
+                            "status": resp.status_code,
+                            "title": resp.reason
+                        })
                 else:
                     done = True
                     return resp
